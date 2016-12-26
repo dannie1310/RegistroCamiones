@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mUsuarioView = (AutoCompleteTextView) findViewById(R.id.usuario);
         mPasswordView = (EditText) findViewById(R.id.password);
-
+        System.out.println("w0: "+mUsuarioView+mPasswordView);
         formLayout = (TextInputLayout) findViewById(R.id.layout);
         mIniciarSesionButton = (Button) findViewById(R.id.iniciar_sesion_button);
 
@@ -190,15 +190,18 @@ public class LoginActivity extends AppCompatActivity {
         UserLoginTask(String email, String password) {
             mUsuario = email;
             mPassword = password;
+
+
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             ContentValues values = new ContentValues();
 
-            values.put("metodo", "paraRegistro");
+            values.put("metodo", "paraRegistroCamiones");
             values.put("usr", mUsuario);
             values.put("pass", mPassword);
+            System.out.println("w: "+mUsuario+mPassword);
 
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
@@ -228,6 +231,10 @@ public class LoginActivity extends AppCompatActivity {
                     data.put("nombre", (String) JSON.get("Nombre"));
                     data.put("usr", mUsuario);
                     data.put("pass", mPassword);
+                    data.put("idproyecto",(String) JSON.get("IdProyecto"));
+                    data.put("base_datos", (String) JSON.get("base_datos"));
+                    data.put("descripcion_database", (String) JSON.get("descripcion_database"));
+
 
                     user.create(data);
 

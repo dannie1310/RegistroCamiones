@@ -14,26 +14,58 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class VisualizarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Usuario usuario;
-    Button buttonRevizar;
+    TextView economico;
+    EditText sindicato;
+    EditText empresa;
+    EditText propietario;
+    EditText pcamion;
+    EditText pcaja;
+    EditText marca;
+    EditText modelo;
+    EditText color;
+    EditText ancho;
+    EditText largo;
+    EditText gato;
+    EditText alto;
+    EditText operador;
+    EditText licencia;
+    Button guardar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_visualizar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         usuario = new Usuario(getApplicationContext());
-        buttonRevizar =(Button) findViewById(R.id.buttonRevizar);
-        buttonRevizar.setOnClickListener(new View.OnClickListener() {
+        economico = (TextView) findViewById(R.id.textViewCamion);
+        economico.setText("datos");
+        sindicato = (EditText) findViewById(R.id.textViewSindicato);
+        empresa = (EditText) findViewById(R.id.textViewEmpresa);
+        propietario = (EditText) findViewById(R.id.textViewPropietario);
+        pcamion =(EditText) findViewById(R.id.textViewPCamion);
+        pcaja = (EditText) findViewById(R.id.textViewPCaja);
+        marca =(EditText) findViewById(R.id.textViewMarca);
+        modelo = (EditText) findViewById(R.id.textViewModelo);
+        color = (EditText) findViewById(R.id.textViewColor);
+        ancho =(EditText) findViewById(R.id.textViewAncho);
+        largo = (EditText) findViewById(R.id.textViewLargo);
+        gato = (EditText) findViewById(R.id.textViewGato);
+        alto = (EditText) findViewById(R.id.textViewAlto);
+        operador = (EditText) findViewById(R.id.textViewNOperador);
+        licencia =(EditText) findViewById(R.id.textViewLicencia);
+
+        guardar= (Button) findViewById(R.id.buttonGuardar);
+        guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent visualizar = new Intent(getApplicationContext(), VisualizarActivity.class);
-                startActivity(visualizar);
+                System.out.println("w: "+sindicato.getText()+ " alto: "+alto.getText());
             }
         });
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -41,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
         if(drawer != null)
             drawer.post(new Runnable() {
                 @Override
@@ -77,13 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -107,9 +133,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+           Intent main = new Intent(this,MainActivity.class);
+            startActivity(main);
         } else if (id == R.id.nav_sync) {
 
         } else if (id == R.id.nav_logout) {
@@ -117,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             usuario.deleteAll();
             startActivity(login_activity);
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

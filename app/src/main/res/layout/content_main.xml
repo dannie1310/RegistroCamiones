@@ -13,4 +13,43 @@
     tools:context="mx.grupohi.registrocamiones.registrocamiones.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <Button
+        android:text="Visualizar Información"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/buttonRevizar"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <TextView
+            android:text="SELECCIONE UN CAMIÓN:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4"
+            android:textAppearance="@android:style/TextAppearance.Material.Menu"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerCamiones" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

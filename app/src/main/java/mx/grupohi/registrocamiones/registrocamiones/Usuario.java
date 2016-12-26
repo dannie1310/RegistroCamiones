@@ -8,6 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 
 class Usuario {
 
+    private Integer idUsuario;
+    private Integer idProyecto;
+    String nombre;
+    String baseDatos;
+    String descripcionBaseDatos;
+    String empresa;
+
+
     private static String usr;
     private static String bd;
     private static String proyecto;
