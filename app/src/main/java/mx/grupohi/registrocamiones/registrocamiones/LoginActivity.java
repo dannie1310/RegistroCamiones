@@ -238,29 +238,50 @@ public class LoginActivity extends AppCompatActivity {
 
                     user.create(data);
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProgressDialog.setMessage("Actualizando catálogo de tags...");
-                        }
-                    });
-
-                   /* try {
-                        final JSONArray proyectos = new JSONArray(JSON.getString("proyectos"));
-                        for (int i = 0; i < proyectos.length(); i++) {
+                    Camion camionModel = new Camion(getApplicationContext());
+                    try {
+                        final JSONArray camiones = new JSONArray(JSON.getString("camiones"));
+                        for (int i = 0; i < camiones.length(); i++) {
                             final int finalI = i + 1;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mProgressDialog.setMessage("Actualizando catálogo de proyectos... \n Proyectos " + finalI + " de " + proyectos.length());
+                                    mProgressDialog.setMessage("Actualizando catálogo de camiones... \n Camion " + finalI + " de " + camiones.length());
                                 }
                             });
-                            System.out.println("q "+proyectos.getJSONObject(i));
-                            pro.create(proyectos.getJSONObject(i));
+                            
+                            JSONObject camion = camiones.getJSONObject(i);
+                            
+                            data.clear();
+                            data.put("idcamion", camion.getString("id_camion"));
+                            data.put("sindicato", camion.getString("sindicato"));
+                            data.put("empresa",  camion.getString("empresa"));
+                            data.put("propietario",  camion.getString("propietario"));
+                            data.put("operador",  camion.getString("operador"));
+                            data.put("licencia",  camion.getString("numero_licencia"));
+                            data.put("economico",  camion.getString("economico"));
+                            data.put("placas_camion",  camion.getString("placas_camion"));
+                            data.put("placas_caja",  camion.getString("placas_caja"));
+                            data.put("marca",  camion.getString("marca"));
+                            data.put("modelo",  camion.getString("modelo"));
+                            data.put("ancho",  camion.getString("ancho"));
+                            data.put("largo",  camion.getString("largo"));
+                            data.put("alto",  camion.getString("alto"));
+                            data.put("espacio_gato",  camion.getString("espacio_gato"));
+                            data.put("altura_extension",  camion.getString("altura_extension"));
+                            data.put("disminucion",  camion.getString("disminucion"));
+                            data.put("cubicacion_real",  camion.getString("cubicacion_real"));
+                            data.put("cubicacion_para_pago",  camion.getString("cubicacion_para_pago"));
+                            data.put("estatus",  "0");
+                            data.put("vigencia_licencia",  camion.getString("vigencia_licencia"));
+                            System.out.println("q "+camion);
+                            if(!camionModel.create(data)){
+                                return false;
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }*/
+                    }
 
                     return true;
                 }

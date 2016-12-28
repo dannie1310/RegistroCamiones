@@ -13,13 +13,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Usuario usuario;
     Button buttonRevizar;
+    Camion camion;
+    Spinner camiones;
+    String idcamion;
+    private HashMap<String, String> spinnerMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         usuario = new Usuario(getApplicationContext());
         buttonRevizar =(Button) findViewById(R.id.buttonRevizar);
-        buttonRevizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Intent visualizar = new Intent(getApplicationContext(), VisualizarActivity.class);
-                startActivity(visualizar);
-            }
-        });
+
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -64,8 +70,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
+        camion = new Camion(this);
+
+        camiones = (Spinner) findViewById(R.id.spinnerCamiones);
+
+        final ArrayList<String> descripcionesCamiones = camion.getArrayListDescripciones();
+        final ArrayList <String> idsCamiones = camion.getArrayListId();
+
+        final String[] spinnerArray = new String[idsCamiones.size()];
+        spinnerMap = new HashMap<>();
+
+        for (int i = 0; i < idsCamiones.size(); i++) {
+            spinnerMap.put(descripcionesCamiones.get(i), idsCamiones.get(i));
+            spinnerArray[i] = descripcionesCamiones.get(i);
+        }
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerArray);
+        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        camiones.setAdapter(arrayAdapter);
+
+        camiones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String placa = camiones.getSelectedItem().toString();
+                idcamion = spinnerMap.get(placa);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        buttonRevizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(idcamion == "0"){
+                    Toast.makeText(getApplicationContext(), "Por Favor Seleccione un Camión de la Lista", Toast.LENGTH_SHORT).show();
+                    camiones.requestFocus();
+                }else {
+                    Intent visualizar = new Intent(getApplicationContext(), VisualizarActivity.class);
+                    visualizar.putExtra("idcamion", idcamion);
+                    startActivity(visualizar);
+                }
+            }
+        });
     }
 
     @Override
@@ -74,7 +125,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
         }
     }
 /*

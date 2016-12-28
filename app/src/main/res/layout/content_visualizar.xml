@@ -8,6 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="mx.grupohi.registrocamiones.registrocamiones.VisualizarActivity"
@@ -161,6 +162,28 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="VIGENCIA LICENCIA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:id="@+id/textViewVigencia"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -210,7 +233,7 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -229,7 +252,7 @@
                 android:id="@+id/textViewColor"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
             android:orientation="horizontal"
@@ -299,9 +322,10 @@
                 android:id="@+id/textViewAncho"
                 android:layout_weight="1.22"
                 android:inputType="numberDecimal"
+                android:gravity="right"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
             <TextView
-                android:text="mts"
+                android:text="m"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.42"
@@ -329,10 +353,11 @@
                 android:id="@+id/textViewLargo"
                 android:layout_weight="1.22"
                 android:inputType="numberDecimal"
+                android:gravity="right"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
 
             <TextView
-                android:text="mts"
+                android:text="m"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.42"
@@ -360,9 +385,10 @@
                 android:id="@+id/textViewAlto"
                 android:layout_weight="1.22"
                 android:inputType="numberDecimal"
+                android:gravity="right"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
             <TextView
-                android:text="mts"
+                android:text="m"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.42"
@@ -390,6 +416,7 @@
                 android:id="@+id/textViewGato"
                 android:layout_weight="1.22"
                 android:inputType="numberDecimal"
+                android:gravity="right"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
             <TextView
                 android:text="m3"
@@ -420,9 +447,10 @@
                 android:id="@+id/textViewExtension"
                 android:layout_weight="1.22"
                 android:inputType="numberDecimal"
+                android:gravity="right"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
             <TextView
-                android:text="mts"
+                android:text="m"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.42"
@@ -449,6 +477,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewDisminucion"
                 android:layout_weight="1.22"
+                android:gravity="right"
                 android:inputType="numberDecimal"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
             <TextView
@@ -478,17 +507,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                android:textSize="18sp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewCUReal"
-                android:layout_weight="0.37"
+                android:layout_weight="0.50"
+                android:gravity="right"
                 android:text="9.6"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textSize="18sp"
+                android:textStyle="normal|bold" />
+            <TextView
+                android:text="m3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.18"
+                android:gravity="right"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textStyle="normal|bold" />
         </LinearLayout>
 
@@ -502,7 +541,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                android:textSize="18sp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textStyle="normal|bold" />
 
             <TextView
@@ -510,11 +550,22 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewCUPago"
                 android:layout_weight="0.37"
+                android:gravity="right"
                 android:text="9.6"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textSize="18sp"
                 android:textStyle="normal|bold" />
+            <TextView
+                android:text="m3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.16"
+                android:gravity="right"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+                android:textStyle="normal|bold" />
+
         </LinearLayout>
+
 
         <Button
             android:text="Guardar"
