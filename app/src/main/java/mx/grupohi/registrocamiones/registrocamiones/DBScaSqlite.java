@@ -35,4 +35,13 @@ public class DBScaSqlite extends SQLiteOpenHelper {
 
         db.close();
     }
+
+    void deleteCatalogos() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        db.execSQL("DELETE FROM user");
+        db.execSQL("DELETE FROM camiones");
+
+        db.close();
+    }
 }

@@ -1,9 +1,12 @@
 package mx.grupohi.registrocamiones.registrocamiones;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Spinner camiones;
     String idcamion;
     private HashMap<String, String> spinnerMap;
+    private ProgressDialog progressDialogSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,11 +168,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
-
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("¡ADVERTENCIA!")
+                    .setMessage("¿Deséas continuar con la sincronización?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                if(!Camion.isSync(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
         } else if (id == R.id.nav_logout) {
-            Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
-            usuario.deleteAll();
-            startActivity(login_activity);
+
+            if(!Camion.isSync(getApplicationContext())){
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("¡ADVERTENCIA!")
+                        .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
+                        .setNegativeButton("NO", null)
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+
+                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                                    usuario.deleteAll();
+                                    startActivity(login_activity);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else {
+                Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                usuario.deleteAll();
+                startActivity(login_activity);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

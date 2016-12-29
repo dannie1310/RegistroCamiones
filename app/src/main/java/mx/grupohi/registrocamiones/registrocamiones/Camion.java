@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -168,5 +170,95 @@ public class Camion {
             db.close();
         }
         return resp;
+    }
+
+    static Boolean isSync(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Boolean result = true;
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                result = false;
+            }
+            return result;
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+
+    static Integer getCount(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1",null);
+        try {
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+
+    static JSONObject getJSON(Context context) {
+        JSONObject JSON = new JSONObject();
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 ORDER BY idcamion", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                Integer i = 0;
+                do {
+
+                    JSONObject json = new JSONObject();
+
+                    json.put("idcamion", c.getString(0));
+                    json.put("sindicato", c.getString(1));
+                    json.put("empresa", c.getString(2));
+                    json.put("propietario", c.getInt(3));
+                    json.put("operador", c.getString(4));
+                    json.put("licencia", c.getString(5));
+                    json.put("economico", c.getString(6));
+                    json.put("placas_camion", c.getString(7));
+                    json.put("placas_caja", c.getString(8));
+                    json.put("marca", c.getString(9));
+                    json.put("modelo", c.getString(10));
+                    json.put("ancho", c.getString(11));
+                    json.put("largo", c.getString(12));
+                    json.put("alto", c.getString(13));
+                    json.put("gato", c.getString(14));
+                    json.put("extension", c.getString(15));
+                    json.put("disminucion", c.getString(16));
+                    json.put("cu_real", c.getString(17));
+                    json.put("cu_pago",c.getString(18));
+                    json.put("vigencia",c.getString(20));
+                    JSON.put(i + "", json);
+                    i++;
+                } while (c.moveToNext());
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
+
+        return JSON;
+    }
+
+
+ static void deleteAll(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        try {
+            db.execSQL("DELETE FROM camiones");
+        } finally {
+            db.close();
+        }
     }
 }

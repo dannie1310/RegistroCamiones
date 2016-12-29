@@ -33,4 +33,6 @@
     <string name="text_update_settings">Encender Ahora</string>
     <string name="title_activity_sync">SyncActivity</string>
     <string name="title_activity_visualizar">Visualizar Detalles del Camión</string>
+    <string name="error_guardar">Error al guardar el registro</string>
+    <string name="ningun_cambio">No se generó ningun cambio</string>
 </resources>

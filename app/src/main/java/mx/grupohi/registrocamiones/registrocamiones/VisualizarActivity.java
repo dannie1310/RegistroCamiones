@@ -50,8 +50,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     EditText disminucion;
     EditText vig_licencia;
     Button guardar;
+    Button cancelar;
     String idcamion;
     Camion camion;
+
+    Double cubicacion;
 
     private DatePickerDialog vigenciaDatePickerDialog;
 
@@ -74,12 +77,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         economico = (TextView) findViewById(R.id.textViewCamion);
         economico.setText(camion.economico);
-
-        cu_pago = (TextView) findViewById(R.id.textViewCUPago);
-        cu_pago.setText(String.valueOf(camion.cu_pago));
-
-        cu_real = (TextView) findViewById(R.id.textViewCUReal);
-        cu_real.setText(String.valueOf(camion.cu_real));
 
         sindicato = (EditText) findViewById(R.id.textViewSindicato);
         sindicato.setText(camion.sindicato);
@@ -129,6 +126,15 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         disminucion = (EditText) findViewById(R.id.textViewDisminucion);
         disminucion.setText(String.valueOf(camion.disminucion));
 
+        cubicacion = setCubicacion(String.valueOf(ancho.getText()),String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()),String.valueOf(gato.getText()),String.valueOf(disminucion.getText()));
+        System.out.println("cubicacion: "+Math.ceil(cubicacion));
+
+        cu_pago = (TextView) findViewById(R.id.textViewCUPago);
+        cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
+
+        cu_real = (TextView) findViewById(R.id.textViewCUReal);
+        cu_real.setText(String.valueOf(redondear(cubicacion,2)));
+
         vig_licencia = (EditText) findViewById(R.id.textViewVigencia);
         vig_licencia.setText(camion.vigencia_licencia);
 
@@ -150,21 +156,31 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
 
         guardar= (Button) findViewById(R.id.buttonGuardar);
+        cancelar = (Button) findViewById(R.id.buttonCancelar);
+
+        cancelar.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(main);
+            }
+        } );
 
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(camion.sindicato.equals(String.valueOf(sindicato.getText())) && camion.placasC.equals(String.valueOf(pcamion.getText())) && camion.pCaja.equals(String.valueOf(pcaja.getText())) && camion.empresa.equals(String.valueOf(empresa.getText())) && camion.propietario.equals(String.valueOf(propietario.getText())) && camion.operador.equals(String.valueOf(operador.getText())) && camion.licencia.equals(String.valueOf(licencia.getText())) && camion.vigencia_licencia.equals(String.valueOf(vig_licencia.getText())) && camion.modelo.equals(String.valueOf(modelo.getText())) && camion.marca.equals(String.valueOf(marca.getText())) && String.valueOf(camion.ancho).equals(String.valueOf(ancho.getText())) && String.valueOf(camion.largo).equals(String.valueOf(largo.getText())) && String.valueOf(camion.alto).equals(String.valueOf(alto.getText())) && String.valueOf(camion.gato).equals(String.valueOf(gato.getText())) && String.valueOf(camion.extension).equals(String.valueOf(extension.getText())) && String.valueOf(camion.disminucion).equals(String.valueOf(disminucion.getText()))){
-                        Toast.makeText(getApplicationContext(), "No se guardo ningun cambio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.ningun_cambio, Toast.LENGTH_SHORT).show();
                 }else {
                     System.out.println("w: " + camion.idCamion + " economico: " + economico.getText()); //guardar (update) Camion.update
+                    cubicacion = setCubicacion(String.valueOf(ancho.getText()),String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()),String.valueOf(gato.getText()),String.valueOf(disminucion.getText()));
+                    System.out.println("cubicacion: "+Math.ceil(cubicacion));
                     ContentValues data = new ContentValues();
 
                     data.put("sindicato", String.valueOf(sindicato.getText()));
                     data.put("empresa",  String.valueOf(empresa.getText()));
                     data.put("propietario",  String.valueOf(propietario.getText()));
                     data.put("operador",  String.valueOf(operador.getText()));
-                    data.put("licencia",  String.valueOf(vig_licencia.getText()));
+                    data.put("licencia",  String.valueOf(licencia.getText()));
                     data.put("economico",  String.valueOf(economico.getText()));
                     data.put("placas_camion",  String.valueOf(pcamion.getText()));
                     data.put("placas_caja",  String.valueOf(pcaja.getText()));
@@ -176,14 +192,20 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                     data.put("espacio_gato",  String.valueOf(gato.getText()));
                     data.put("altura_extension",  String.valueOf(extension.getText()));
                     data.put("disminucion",  String.valueOf(disminucion.getText()));
-                    data.put("cubicacion_real", String.valueOf(cu_real.getText()));
-                    data.put("cubicacion_para_pago",  String.valueOf(cu_pago.getText()));
+                    data.put("cubicacion_real", String.valueOf(redondear(cubicacion,2)));
+                    data.put("cubicacion_para_pago",  String.valueOf(Math.ceil(cubicacion)));
                     data.put("estatus",  "1");
                     data.put("vigencia_licencia",  String.valueOf(vig_licencia.getText()));
 
                     System.out.println("guardar: "+data);
 
-                    camion.update(idcamion, data, getApplicationContext());
+                    Boolean r = camion.update(idcamion, data, getApplicationContext());
+                    if(!r){
+                        Toast.makeText(getApplicationContext(), R.string.error_guardar, Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent ok = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(ok);
+                    }
                 }
             }
         });
@@ -218,6 +240,15 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public Double setCubicacion(String ancho, String alto, String largo, String extension, String gato, String disminucion) {
+        return Double.valueOf(ancho) * Double.valueOf(largo) * (Double.valueOf(alto) + Double.valueOf(extension)) - Double.valueOf(gato) - Double.valueOf(disminucion);
+    }
+
+    public Double redondear(double numero, int digitos){
+        int cifras = (int) Math.pow(10, digitos);
+        return Math.rint(numero * cifras)/cifras;
     }
 
     @Override

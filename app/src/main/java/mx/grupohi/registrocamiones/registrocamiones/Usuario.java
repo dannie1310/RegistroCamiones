@@ -8,15 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 class Usuario {
 
-    private Integer idUsuario;
-    private Integer idProyecto;
-    String nombre;
-    String baseDatos;
-    String descripcionBaseDatos;
-    String empresa;
 
 
-    private static String usr;
+
+    static String usr;
     private static String bd;
     private static String proyecto;
     private Context context;
@@ -24,8 +19,16 @@ class Usuario {
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
 
-    private String name;
-    private String pass;
+    String name;
+    String pass;
+
+    Integer idUsuario;
+    Integer idProyecto;
+
+    String nombre;
+    String baseDatos;
+    String descripcionBaseDatos;
+    String empresa;
 
     Usuario(Context context) {
         this.context = context;
@@ -37,6 +40,29 @@ class Usuario {
         try{
             return db.insert("user", null, values) > -1;
         } finally {
+            db.close();
+        }
+    }
+
+    Usuario getUsuario() {
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
+                this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+                this.nombre = c.getString(c.getColumnIndex("nombre"));
+                this.baseDatos = c.getString(c.getColumnIndex("base_datos"));
+                this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
+                this.usr = c.getString(c.getColumnIndex("usr"));
+                this.pass = c.getString(c.getColumnIndex("pass"));
+
+                return this;
+            } else {
+                return null;
+            }
+        }finally {
+            c.close();
             db.close();
         }
     }
@@ -147,4 +173,5 @@ class Usuario {
             db.close();
         }
     }
+
 }

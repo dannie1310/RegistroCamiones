@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
     Usuario user;
+    Camion camion;
 
     // Referencias UI.
     private AutoCompleteTextView mUsuarioView;
@@ -57,10 +58,13 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private Button mIniciarSesionButton;
     Intent mainActivity;
+    private DBScaSqlite db_sca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = new Usuario(this);
+        camion = new Camion(this);
+        db_sca = new DBScaSqlite(getApplicationContext(), "sca", null, 1);
         if(user.get()) {
             nextActivity();
         }
@@ -172,11 +176,6 @@ public class LoginActivity extends AppCompatActivity {
             }).run();
         }
     }
-
-    public void deleteAllTables() {
-        user.deleteAll();
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -206,13 +205,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSON = Util.JsonHttp(url, values);
-            } catch (Exception e) {
-                e.printStackTrace();
-                errorMessage(getResources().getString(R.string.general_exception));
-                return false;
-            }
-            deleteAllTables();
-            try {
+                db_sca.deleteCatalogos();
                 if(JSON.has("error")) {
                     errorLayout(formLayout, (String) JSON.get("error"));
                     return false;
