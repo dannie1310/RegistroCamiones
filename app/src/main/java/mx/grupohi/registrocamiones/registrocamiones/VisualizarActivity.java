@@ -1,11 +1,14 @@
 package mx.grupohi.registrocamiones.registrocamiones;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -59,6 +62,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     private DatePickerDialog vigenciaDatePickerDialog;
 
     private SimpleDateFormat dateFormatter;
+    private ProgressDialog progressDialogSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +108,31 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         ancho =(EditText) findViewById(R.id.textViewAncho);
         ancho.setText(String.valueOf(camion.ancho));
+        ancho.requestFocus();
+
+
+        ancho.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         cubicacion = setCubicacion(String.valueOf(ancho.getText()),String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()),String.valueOf(gato.getText()),String.valueOf(disminucion.getText()));
+                                         System.out.println("2cubicacion: "+Math.ceil(cubicacion));
+                                         cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
+                                         cu_real.setText(String.valueOf(redondear(cubicacion,2)));
+                                     }
+        });
 
         largo = (EditText) findViewById(R.id.textViewLargo);
         largo.setText(String.valueOf(camion.largo));
+        largo.requestFocus();
+        largo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cubicacion = setCubicacion(String.valueOf(ancho.getText()),String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()),String.valueOf(gato.getText()),String.valueOf(disminucion.getText()));
+                System.out.println("2cubicacion: "+Math.ceil(cubicacion));
+                cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
+                cu_real.setText(String.valueOf(redondear(cubicacion,2)));
+            }
+        });
 
         gato = (EditText) findViewById(R.id.textViewGato);
         gato.setText(String.valueOf(camion.gato));
@@ -286,11 +312,54 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
            Intent main = new Intent(this,MainActivity.class);
             startActivity(main);
         } else if (id == R.id.nav_sync) {
-
+            new AlertDialog.Builder(VisualizarActivity.this)
+                    .setTitle("¡ADVERTENCIA!")
+                    .setMessage("¿Deséas continuar con la sincronización?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                if(!Camion.isSync(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(VisualizarActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
         } else if (id == R.id.nav_logout) {
-            Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
-            usuario.deleteAll();
-            startActivity(login_activity);
+            if(!Camion.isSync(getApplicationContext())){
+                new AlertDialog.Builder(VisualizarActivity.this)
+                        .setTitle("¡ADVERTENCIA!")
+                        .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo, \n ¿Deséas sincronizar?")
+                        .setNegativeButton("NO", null)
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(VisualizarActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+
+                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                                    usuario.deleteAll();
+                                    startActivity(login_activity);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else {
+                Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                usuario.deleteAll();
+                startActivity(login_activity);
+            }
         }
 
 

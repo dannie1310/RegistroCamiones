@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(!Camion.isSync(getApplicationContext())){
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("¡ADVERTENCIA!")
-                        .setMessage("Hay viajes aún sin sincronizar, se borrarán los registros de viajes almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
+                        .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
                         .setNegativeButton("NO", null)
                         .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {

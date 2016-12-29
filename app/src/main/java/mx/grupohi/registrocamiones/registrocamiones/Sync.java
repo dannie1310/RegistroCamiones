@@ -38,17 +38,18 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             ContentValues values = new ContentValues();
 
             values.clear();
-            values.put("metodo", "registro_camiones");
+            values.put("metodo", "captura");
             values.put("usr", usuario.usr);
             values.put("pass", usuario.pass);
             values.put("bd", usuario.baseDatos);
             values.put("idusuario", usuario.idUsuario);
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
+            values.put("id_proyecto", usuario.idProyecto);
 
             if (Camion.getCount(context) != 0) {
                 JSONObject Obj = Camion.getJSON(context);
                 values.put("camiones_editados", String.valueOf(Obj));
-                System.out.println("JSON: "+String.valueOf(Obj));
+
             }
 
 
@@ -56,6 +57,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSONCAMIONES = HttpConnection.POST(url, values);
+                System.out.println("JSON: "+String.valueOf(values));
 
             }catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
