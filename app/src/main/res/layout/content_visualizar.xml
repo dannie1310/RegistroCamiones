@@ -67,6 +67,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:inputType="textCapCharacters"
                 android:id="@+id/textViewSindicato"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
@@ -77,7 +78,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="EMPRESA"
+                android:text="EMPRESA *"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -87,6 +88,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:inputType="textCapCharacters"
                 android:id="@+id/textViewEmpresa"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
@@ -109,6 +111,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewPropietario"
+                android:inputType="textCapCharacters"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -137,6 +140,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewNOperador"
+                android:inputType="textCapCharacters"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -157,6 +161,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:inputType="textCapCharacters"
                 android:id="@+id/textViewLicencia"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
@@ -208,6 +213,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewModelo"
+                android:inputType="textCapCharacters"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -229,6 +235,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewMarca"
+                android:inputType="textCapCharacters"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -271,6 +278,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewPCamion"
+                android:inputType="textCapCharacters"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -292,6 +300,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewPCaja"
+                android:inputType="textCapCharacters"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -517,7 +526,6 @@
                 android:id="@+id/textViewCUReal"
                 android:layout_weight="0.50"
                 android:gravity="right"
-                android:text="9.6"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textSize="18sp"
                 android:textStyle="normal|bold" />
@@ -551,7 +559,6 @@
                 android:id="@+id/textViewCUPago"
                 android:layout_weight="0.37"
                 android:gravity="right"
-                android:text="9.6"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textSize="18sp"
                 android:textStyle="normal|bold" />

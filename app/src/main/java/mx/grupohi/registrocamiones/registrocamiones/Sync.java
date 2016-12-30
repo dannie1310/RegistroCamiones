@@ -38,7 +38,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             ContentValues values = new ContentValues();
 
             values.clear();
-            values.put("metodo", "captura");
+            values.put("metodo", "capturaActualizacionCamiones");
             values.put("usr", usuario.usr);
             values.put("pass", usuario.pass);
             values.put("bd", usuario.baseDatos);
@@ -73,11 +73,11 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         progressDialog.dismiss();
         if(aBoolean) {
             try {
-                if (JSON.has("error")) {
-                    Toast.makeText(context, (String) JSON.get("error"), Toast.LENGTH_SHORT).show();
-                } else if(JSON.has("msj")) {
-                    Camion.deleteAll(context);
-                    Toast.makeText(context, (String) JSON.get("msj"), Toast.LENGTH_LONG).show();
+                if (JSONCAMIONES.has("error")) {
+                    Toast.makeText(context, (String) JSONCAMIONES.get("error"), Toast.LENGTH_SHORT).show();
+                } else if(JSONCAMIONES.has("msj")) {
+                    Camion.deleteAll(context); //cambiar estatus
+                    Toast.makeText(context, (String) JSONCAMIONES.get("msj"), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

@@ -215,10 +215,10 @@ public class Camion {
 
                     JSONObject json = new JSONObject();
 
-                    json.put("idcamion", c.getString(0));
+                    json.put("id_camion", c.getString(0));
                     json.put("sindicato", c.getString(1));
                     json.put("empresa", c.getString(2));
-                    json.put("propietario", c.getInt(3));
+                    json.put("propietario", c.getString(3));
                     json.put("operador", c.getString(4));
                     json.put("licencia", c.getString(5));
                     json.put("economico", c.getString(6));
@@ -255,8 +255,17 @@ public class Camion {
  static void deleteAll(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
+        ContentValues data = new ContentValues();
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 ORDER BY idcamion", null);
         try {
-            db.execSQL("DELETE FROM camiones");
+            if(c != null && c.moveToFirst()) {
+                Integer i = 0;
+                do {
+                    data.clear();
+                    data.put("estatus", "0");
+                    db.update("camiones", data, "idcamion = '" + c.getInt(c.getColumnIndex("idcamion")) + "'", null);
+                } while (c.moveToNext());
+            }
         } finally {
             db.close();
         }
