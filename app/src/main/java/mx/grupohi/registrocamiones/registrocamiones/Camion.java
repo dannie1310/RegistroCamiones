@@ -162,7 +162,9 @@ public class Camion {
         SQLiteDatabase db = db_sca.getWritableDatabase();
 
         try{
-            db.update("camiones", data, "idcamion = '"+idcamion+"'", null);
+            //for(int i=1; i<=100; i++) {
+                db.update("camiones", data, "idcamion = '" + idcamion + "'", null);
+            //}
             resp = true;
         }catch (Exception e){
             resp = false;

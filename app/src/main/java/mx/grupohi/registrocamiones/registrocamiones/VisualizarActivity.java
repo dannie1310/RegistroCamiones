@@ -90,7 +90,9 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         empresa.setText(camion.empresa);
 
         propietario = (EditText) findViewById(R.id.textViewPropietario);
-        propietario.setText(camion.propietario);
+        if(!camion.propietario.equals("SIN")){
+            propietario.setText(camion.propietario);
+        }
 
         pcamion =(EditText) findViewById(R.id.textViewPCamion);
         pcamion.setText(camion.placasC);
@@ -191,7 +193,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         cubicacion = setCubicacion(String.valueOf(ancho.getText()),String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()),String.valueOf(gato.getText()),String.valueOf(disminucion.getText()));
         System.out.println("cubicacion: "+Math.ceil(cubicacion));
-
+        System.out.println("reañ: "+redondear(cubicacion,2));
         cu_pago = (TextView) findViewById(R.id.textViewCUPago);
         cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
 
@@ -238,26 +240,26 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                         System.out.println("cubicacion: " + Math.ceil(cubicacion));
                         ContentValues data = new ContentValues();
 
-                        data.put("sindicato", String.valueOf(sindicato.getText()));
-                        data.put("empresa", String.valueOf(empresa.getText()));
-                        data.put("propietario", String.valueOf(propietario.getText()));
-                        data.put("operador", String.valueOf(operador.getText()));
-                        data.put("licencia", String.valueOf(licencia.getText()));
-                        data.put("economico", String.valueOf(economico.getText()));
-                        data.put("placas_camion", String.valueOf(pcamion.getText()));
-                        data.put("placas_caja", String.valueOf(pcaja.getText()));
-                        data.put("marca", String.valueOf(marca.getText()));
-                        data.put("modelo", String.valueOf(modelo.getText()));
-                        data.put("ancho", String.valueOf(ancho.getText()));
-                        data.put("largo", String.valueOf(largo.getText()));
-                        data.put("alto", String.valueOf(alto.getText()));
-                        data.put("espacio_gato", String.valueOf(gato.getText()));
-                        data.put("altura_extension", String.valueOf(extension.getText()));
-                        data.put("disminucion", String.valueOf(disminucion.getText()));
-                        data.put("cubicacion_real", String.valueOf(redondear(cubicacion, 2)));
-                        data.put("cubicacion_para_pago", String.valueOf(Math.ceil(cubicacion)));
+                        data.put("sindicato", String.valueOf(sindicato.getText()).replaceAll(" +"," ").trim());
+                        data.put("empresa", String.valueOf(empresa.getText()).replaceAll(" +"," ").trim());
+                        data.put("propietario", String.valueOf(propietario.getText()).replaceAll(" +"," ").trim());
+                        data.put("operador", String.valueOf(operador.getText()).replaceAll(" +"," ").trim());
+                        data.put("licencia", String.valueOf(licencia.getText()).replaceAll(" +"," ").trim());
+                       // data.put("economico", String.valueOf(economico.getText()).replaceAll(" +"," ").trim());
+                        data.put("placas_camion", String.valueOf(pcamion.getText()).replaceAll(" +"," ").trim());
+                        data.put("placas_caja", String.valueOf(pcaja.getText()).replaceAll(" +"," ").trim());
+                        data.put("marca", String.valueOf(marca.getText()).replaceAll(" +"," ").trim());
+                        data.put("modelo", String.valueOf(modelo.getText()).replaceAll(" +"," ").trim());
+                        data.put("ancho", String.valueOf(ancho.getText()).replaceAll(" +"," ").trim());
+                        data.put("largo", String.valueOf(largo.getText()).replaceAll(" +"," ").trim());
+                        data.put("alto", String.valueOf(alto.getText()).replaceAll(" +"," ").trim());
+                        data.put("espacio_gato", String.valueOf(gato.getText()).replaceAll(" +"," ").trim());
+                        data.put("altura_extension", String.valueOf(extension.getText()).replaceAll(" +"," ").trim());
+                        data.put("disminucion", String.valueOf(disminucion.getText()).replaceAll(" +"," ").trim());
+                        data.put("cubicacion_real", String.valueOf(redondear(cubicacion, 2)).replaceAll(" +"," ").trim());
+                        data.put("cubicacion_para_pago", String.valueOf(Math.ceil(cubicacion)).replaceAll(" +"," ").trim());
                         data.put("estatus", "1");
-                        data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()));
+                        data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
 
                         System.out.println("guardar: " + data);
 
@@ -313,8 +315,18 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
     public Double redondear(double numero, int digitos){
         int cifras = (int) Math.pow(10, digitos);
-        return Math.rint(numero * cifras)/cifras;
+        double red = Math.rint(numero * cifras)/cifras;
+        String decimales = String.valueOf(red);
+        decimales=decimales.substring(decimales.indexOf('.')+1,decimales.length());
+        System.out.println("num: "+decimales);
+
+        if(digitos==2){
+
+        }
+
+        return red;
     }
+
 
     @Override
     public void onBackPressed() {

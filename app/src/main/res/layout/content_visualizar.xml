@@ -213,7 +213,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewModelo"
-                android:inputType="textCapCharacters"
+                android:inputType="numberDecimal"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
