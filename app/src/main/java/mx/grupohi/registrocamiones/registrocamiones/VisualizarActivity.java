@@ -125,8 +125,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                                      public void onFocusChange(View v, boolean hasFocus) {
                                          cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
                                          System.out.println("2cubicacion: " + Math.ceil(cubicacion));
-                                         cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
-                                         cu_real.setText(String.valueOf(redondear(cubicacion, 2)));
+                                         cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+                                         cu_real.setText(String.valueOf(redondear(cubicacion)));
                                      }
         });
 
@@ -137,8 +137,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
                 System.out.println("2cubicacion: " + Math.ceil(cubicacion));
-                cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
-                cu_real.setText(String.valueOf(redondear(cubicacion, 2)));
+                cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+                cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
         });
 
@@ -150,8 +150,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
                 System.out.println("2cubicacion: " + Math.ceil(cubicacion));
-                cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
-                cu_real.setText(String.valueOf(redondear(cubicacion, 2)));
+                cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+                cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
         });
 
@@ -162,8 +162,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
                 System.out.println("2cubicacion: " + Math.ceil(cubicacion));
-                cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
-                cu_real.setText(String.valueOf(redondear(cubicacion, 2)));
+                cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+                cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
         });
 
@@ -174,8 +174,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
                 System.out.println("2cubicacion: " + Math.ceil(cubicacion));
-                cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
-                cu_real.setText(String.valueOf(redondear(cubicacion, 2)));
+                cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+                cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
         });
 
@@ -186,19 +186,19 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
                 System.out.println("2cubicacion: " + Math.ceil(cubicacion));
-                cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
-                cu_real.setText(String.valueOf(redondear(cubicacion, 2)));
+                cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+                cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
         });
 
         cubicacion = setCubicacion(String.valueOf(ancho.getText()),String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()),String.valueOf(gato.getText()),String.valueOf(disminucion.getText()));
-        System.out.println("cubicacion: "+Math.ceil(cubicacion));
-        System.out.println("reañ: "+redondear(cubicacion,2));
+
         cu_pago = (TextView) findViewById(R.id.textViewCUPago);
-        cu_pago.setText(String.valueOf(Math.ceil(cubicacion)));
+        cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
+
 
         cu_real = (TextView) findViewById(R.id.textViewCUReal);
-        cu_real.setText(String.valueOf(redondear(cubicacion,2)));
+        cu_real.setText(String.valueOf(redondear(cubicacion)));
 
         vig_licencia = (EditText) findViewById(R.id.textViewVigencia);
         if(!camion.vigencia_licencia.equals("0000-00-00")) {
@@ -256,8 +256,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                         data.put("espacio_gato", String.valueOf(gato.getText()).replaceAll(" +"," ").trim());
                         data.put("altura_extension", String.valueOf(extension.getText()).replaceAll(" +"," ").trim());
                         data.put("disminucion", String.valueOf(disminucion.getText()).replaceAll(" +"," ").trim());
-                        data.put("cubicacion_real", String.valueOf(redondear(cubicacion, 2)).replaceAll(" +"," ").trim());
-                        data.put("cubicacion_para_pago", String.valueOf(Math.ceil(cubicacion)).replaceAll(" +"," ").trim());
+                        data.put("cubicacion_real", String.valueOf(redondear(cubicacion)).replaceAll(" +"," ").trim());
+                        data.put("cubicacion_para_pago", String.valueOf(Math.round(redondear(cubicacion))).replaceAll(" +"," ").trim());
                         data.put("estatus", "1");
                         data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
 
@@ -313,18 +313,9 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         return r;
     }
 
-    public Double redondear(double numero, int digitos){
-        int cifras = (int) Math.pow(10, digitos);
-        double red = Math.rint(numero * cifras)/cifras;
-        String decimales = String.valueOf(red);
-        decimales=decimales.substring(decimales.indexOf('.')+1,decimales.length());
-        System.out.println("num: "+decimales);
-
-        if(digitos==2){
-
-        }
-
-        return red;
+    public Double redondear(double numero){
+        int cifras = (int) Math.pow(10, 2);
+        return  Math.rint(numero * cifras)/cifras;
     }
 
 
