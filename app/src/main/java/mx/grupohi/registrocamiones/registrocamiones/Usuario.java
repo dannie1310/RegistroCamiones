@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
 
 
 class Usuario {
@@ -173,5 +177,17 @@ class Usuario {
             db.close();
         }
     }
+
+    public static String encodeToBase64Imagen(Bitmap image, int quality)
+    {
+
+        Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        String respuesta = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        respuesta = respuesta.replace("\n","");
+        return respuesta;
+    }
+
 
 }

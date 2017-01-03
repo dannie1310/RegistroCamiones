@@ -55,6 +55,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     EditText vig_licencia;
     Button guardar;
     Button cancelar;
+    Button imagenes;
     String idcamion;
     Camion camion;
 
@@ -220,6 +221,22 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         guardar= (Button) findViewById(R.id.buttonGuardar);
         cancelar = (Button) findViewById(R.id.buttonCancelar);
+        imagenes = (Button) findViewById(R.id.buttonImagenes);
+
+        imagenes.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Boolean resp = guardar();
+                Integer cantidad = ImagenesCamion.getCount(getApplicationContext());
+                Intent imagen;
+                if(cantidad.equals(0)){
+                     imagen =new Intent(getApplicationContext(), CamaraActivity.class);
+                }else{
+                     imagen = new Intent(getApplicationContext(), ImagenesActivity.class);
+                }
+                imagen.putExtra("idcamion",idcamion);
+                startActivity(imagen);
+            }
+        });
 
         cancelar.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -231,47 +248,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if(camion.sindicato.equals(String.valueOf(sindicato.getText())) && camion.placasC.equals(String.valueOf(pcamion.getText())) && camion.pCaja.equals(String.valueOf(pcaja.getText())) && camion.empresa.equals(String.valueOf(empresa.getText())) && camion.propietario.equals(String.valueOf(propietario.getText())) && camion.operador.equals(String.valueOf(operador.getText())) && camion.licencia.equals(String.valueOf(licencia.getText())) && camion.vigencia_licencia.equals(String.valueOf(vig_licencia.getText())) && camion.modelo.equals(String.valueOf(modelo.getText())) && camion.marca.equals(String.valueOf(marca.getText())) && String.valueOf(camion.ancho).equals(String.valueOf(ancho.getText())) && String.valueOf(camion.largo).equals(String.valueOf(largo.getText())) && String.valueOf(camion.alto).equals(String.valueOf(alto.getText())) && String.valueOf(camion.gato).equals(String.valueOf(gato.getText())) && String.valueOf(camion.extension).equals(String.valueOf(extension.getText())) && String.valueOf(camion.disminucion).equals(String.valueOf(disminucion.getText()))){
-                        Toast.makeText(getApplicationContext(), R.string.ningun_cambio, Toast.LENGTH_SHORT).show();
-                }else {*/
-                    if(!attemptLogin()) {
-                        System.out.println("w: " + camion.idCamion + " economico: " + economico.getText()); //guardar (update) Camion.update
-                        cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                        System.out.println("cubicacion: " + Math.ceil(cubicacion));
-                        ContentValues data = new ContentValues();
-
-                        data.put("sindicato", String.valueOf(sindicato.getText()).replaceAll(" +"," ").trim());
-                        data.put("empresa", String.valueOf(empresa.getText()).replaceAll(" +"," ").trim());
-                        data.put("propietario", String.valueOf(propietario.getText()).replaceAll(" +"," ").trim());
-                        data.put("operador", String.valueOf(operador.getText()).replaceAll(" +"," ").trim());
-                        data.put("licencia", String.valueOf(licencia.getText()).replaceAll(" +"," ").trim());
-                       // data.put("economico", String.valueOf(economico.getText()).replaceAll(" +"," ").trim());
-                        data.put("placas_camion", String.valueOf(pcamion.getText()).replaceAll(" +"," ").trim());
-                        data.put("placas_caja", String.valueOf(pcaja.getText()).replaceAll(" +"," ").trim());
-                        data.put("marca", String.valueOf(marca.getText()).replaceAll(" +"," ").trim());
-                        data.put("modelo", String.valueOf(modelo.getText()).replaceAll(" +"," ").trim());
-                        data.put("ancho", String.valueOf(ancho.getText()).replaceAll(" +"," ").trim());
-                        data.put("largo", String.valueOf(largo.getText()).replaceAll(" +"," ").trim());
-                        data.put("alto", String.valueOf(alto.getText()).replaceAll(" +"," ").trim());
-                        data.put("espacio_gato", String.valueOf(gato.getText()).replaceAll(" +"," ").trim());
-                        data.put("altura_extension", String.valueOf(extension.getText()).replaceAll(" +"," ").trim());
-                        data.put("disminucion", String.valueOf(disminucion.getText()).replaceAll(" +"," ").trim());
-                        data.put("cubicacion_real", String.valueOf(redondear(cubicacion)).replaceAll(" +"," ").trim());
-                        data.put("cubicacion_para_pago", String.valueOf(Math.round(redondear(cubicacion))).replaceAll(" +"," ").trim());
-                        data.put("estatus", "1");
-                        data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
-
-                        System.out.println("guardar: " + data);
-
-                        Boolean r = camion.update(idcamion, data, getApplicationContext());
-                        if (!r) {
-                            Toast.makeText(getApplicationContext(), R.string.error_guardar, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Intent ok = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(ok);
-                        }
-                    }
-                //}
+              Boolean resp = guardar();
             }
         });
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -305,6 +282,51 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+    public Boolean guardar(){
+         /* if(camion.sindicato.equals(String.valueOf(sindicato.getText())) && camion.placasC.equals(String.valueOf(pcamion.getText())) && camion.pCaja.equals(String.valueOf(pcaja.getText())) && camion.empresa.equals(String.valueOf(empresa.getText())) && camion.propietario.equals(String.valueOf(propietario.getText())) && camion.operador.equals(String.valueOf(operador.getText())) && camion.licencia.equals(String.valueOf(licencia.getText())) && camion.vigencia_licencia.equals(String.valueOf(vig_licencia.getText())) && camion.modelo.equals(String.valueOf(modelo.getText())) && camion.marca.equals(String.valueOf(marca.getText())) && String.valueOf(camion.ancho).equals(String.valueOf(ancho.getText())) && String.valueOf(camion.largo).equals(String.valueOf(largo.getText())) && String.valueOf(camion.alto).equals(String.valueOf(alto.getText())) && String.valueOf(camion.gato).equals(String.valueOf(gato.getText())) && String.valueOf(camion.extension).equals(String.valueOf(extension.getText())) && String.valueOf(camion.disminucion).equals(String.valueOf(disminucion.getText()))){
+                        Toast.makeText(getApplicationContext(), R.string.ningun_cambio, Toast.LENGTH_SHORT).show();
+                }else {
+        }*/
+        Boolean r = false;
+        if(!checar()) {
+            System.out.println("w: " + camion.idCamion + " economico: " + economico.getText()); //guardar (update) Camion.update
+            cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
+            System.out.println("cubicacion: " + Math.ceil(cubicacion));
+            ContentValues data = new ContentValues();
+
+            data.put("sindicato", String.valueOf(sindicato.getText()).replaceAll(" +"," ").trim());
+            data.put("empresa", String.valueOf(empresa.getText()).replaceAll(" +"," ").trim());
+            data.put("propietario", String.valueOf(propietario.getText()).replaceAll(" +"," ").trim());
+            data.put("operador", String.valueOf(operador.getText()).replaceAll(" +"," ").trim());
+            data.put("licencia", String.valueOf(licencia.getText()).replaceAll(" +"," ").trim());
+            // data.put("economico", String.valueOf(economico.getText()).replaceAll(" +"," ").trim());
+            data.put("placas_camion", String.valueOf(pcamion.getText()).replaceAll(" +"," ").trim());
+            data.put("placas_caja", String.valueOf(pcaja.getText()).replaceAll(" +"," ").trim());
+            data.put("marca", String.valueOf(marca.getText()).replaceAll(" +"," ").trim());
+            data.put("modelo", String.valueOf(modelo.getText()).replaceAll(" +"," ").trim());
+            data.put("ancho", String.valueOf(ancho.getText()).replaceAll(" +"," ").trim());
+            data.put("largo", String.valueOf(largo.getText()).replaceAll(" +"," ").trim());
+            data.put("alto", String.valueOf(alto.getText()).replaceAll(" +"," ").trim());
+            data.put("espacio_gato", String.valueOf(gato.getText()).replaceAll(" +"," ").trim());
+            data.put("altura_extension", String.valueOf(extension.getText()).replaceAll(" +"," ").trim());
+            data.put("disminucion", String.valueOf(disminucion.getText()).replaceAll(" +"," ").trim());
+            data.put("cubicacion_real", String.valueOf(redondear(cubicacion)).replaceAll(" +"," ").trim());
+            data.put("cubicacion_para_pago", String.valueOf(Math.round(redondear(cubicacion))).replaceAll(" +"," ").trim());
+            data.put("estatus", "1");
+            data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
+
+            System.out.println("guardar: " + data);
+
+            r = camion.update(idcamion, data, getApplicationContext());
+            if (!r) {
+                Toast.makeText(getApplicationContext(), R.string.error_guardar, Toast.LENGTH_SHORT).show();
+            } else {
+                Intent ok = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(ok);
+            }
+        }
+        return r;
     }
 
     public Double setCubicacion(String ancho, String alto, String largo, String extension, String gato, String disminucion) {
@@ -417,7 +439,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         }
     }
 
-    private boolean attemptLogin() {
+    private boolean checar() {
 
         //Reset Errors
 
