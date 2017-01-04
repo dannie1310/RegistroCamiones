@@ -16,7 +16,7 @@ public class TipoImagenes {
     Context context;
     private static SQLiteDatabase db;
     private DBScaSqlite db_sca;
-    Integer id;
+    String id;
     String descripcion;
 
     TipoImagenes(Context context) {
@@ -28,7 +28,7 @@ public class TipoImagenes {
         db = db_sca.getWritableDatabase();
         Boolean result = db.insert("tipos_imagenes", null, data) > -1;
         if (result) {
-            this.id = data.getAsInteger("id");
+            this.id = data.getAsString("id");
             this.descripcion = data.getAsString("descripcion");
         }
         db.close();

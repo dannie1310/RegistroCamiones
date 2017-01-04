@@ -86,7 +86,7 @@ public class ImagenesCamion {
     public static Integer getCount(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE estatus = 1",null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion ",null);
         try {
             return c.getCount();
         } finally {
@@ -169,8 +169,8 @@ public class ImagenesCamion {
                    // System.out.println("**---"+i+" ---"+c.getInt(0)+"-----**"+c.getString(2)+"**----"+c.getString(5)+"----**");
                     JSONObject json = new JSONObject();
                     json.put("idImagen", c.getInt(0));
-                    json.put("CodeImagen", c.getString(5));
                     json.put("idtipo_imagen", c.getString(2));
+                    json.put("idcamion", c.getString(1));
                     json.put("imagen", c.getString(4));
                     JSON.put(i + "", json);
                     i++;
@@ -189,17 +189,17 @@ public class ImagenesCamion {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
         Integer idviaje = getIdViaje(context, id);
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE idviaje_neto = '" + idviaje +"'", null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE idcamion = '" + idviaje +"'", null);
 
         try {
 
             Integer imagenes = c.getCount();
            // System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
             if(imagenes == 1){
-                db.execSQL("DELETE FROM viajesnetos WHERE id= " + idviaje );
+                db.execSQL("DELETE FROM imagenes_camion WHERE id= " + idviaje );
             }
 
-            db.execSQL("DELETE FROM imagenes_viaje WHERE id= " + id);
+            db.execSQL("DELETE FROM imagenes_camion WHERE id= " + id);
 
         }catch (Exception e) {
             e.printStackTrace();

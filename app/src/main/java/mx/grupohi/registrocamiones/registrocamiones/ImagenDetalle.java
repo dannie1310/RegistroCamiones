@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 public class ImagenDetalle extends AppCompatActivity {
-    private ImagenesViaje itemDetallado;
+    private ImagenesCamion itemDetallado;
     private ImageView imagenExtendida;
 
     public static final String EXTRA_PARAM_ID = "";
@@ -19,7 +19,7 @@ public class ImagenDetalle extends AppCompatActivity {
         setContentView(R.layout.activity_imagen_detalle);
 
         // Obtener el coche con el identificador establecido en la actividad principal
-        itemDetallado = ImagenesViaje.getItem(getIntent().getIntExtra(EXTRA_PARAM_ID, 0));
+        itemDetallado = ImagenesCamion.getItem(getIntent().getIntExtra(EXTRA_PARAM_ID, 0));
 
         imagenExtendida = (ImageView) findViewById(R.id.imagen_extendida);
 

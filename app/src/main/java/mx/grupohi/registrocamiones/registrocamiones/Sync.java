@@ -23,6 +23,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
     private JSONObject JSONCAMIONES;
     private JSONObject JSON;
+    Integer imagenesRegistradas = 0;
 
     Sync(Context context, ProgressDialog progressDialog) {
 
@@ -58,6 +59,53 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSONCAMIONES = HttpConnection.POST(url, values);
                 System.out.println("JSON: "+String.valueOf(values));
+                ContentValues aux = new ContentValues();
+                int i = 0;
+               // while (ImagenesCamion.getCount(context) != 0) {
+                    i++;
+                    JSON = null;
+                    //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
+                    aux.put("metodo", "cargaImagenesCamiones");
+                    aux.put("usr", usuario.usr);
+                    aux.put("pass", usuario.pass);
+                    aux.put("bd", usuario.baseDatos);
+                    aux.put("Imagenes", String.valueOf(ImagenesCamion.getJSONImagenes(context)));
+
+                    try {
+                        JSON = HttpConnection.POST(url, aux);
+                        Log.i("json ", String.valueOf(aux));
+                        try {
+                           /*   if (JSON.has("imagenes_registradas")) {
+                                final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
+                                for (int r = 0; r < imagenes.length(); r++) {
+                                    ImagenesCamion.syncLimit(context, imagenes.getInt(r));
+                                    imagenesRegistradas++;
+                                }
+                            }
+
+                            //System.out.println("imagenesRegiustradas: "+imagenesRegistradas);
+
+                          if (JSON.has("imagenes_no_registradas_sv")) {
+                                final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas_sv"));
+                                //System.out.println("Errores1: " + errores);
+                                for (int r = 0; r < errores.length(); r++) {
+                                    ImagenesCamion.cambioEstatus(context, errores.getInt(r));
+                                }
+                            }
+                            if (JSON.has("imagenes_no_registradas")) {
+                                final JSONArray errores = new JSONArray(JSON.getString("imagenes_no_registradas"));
+                                // System.out.println("Errores2: " + errores);
+                                for (int r = 0; r < errores.length(); r++) {
+                                    ImagenesCamion.cambioEstatus(context, errores.getInt(r));
+                                }
+                            }*/
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                //}
 
             }catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
@@ -76,7 +124,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 if (JSONCAMIONES.has("error")) {
                     Toast.makeText(context, (String) JSONCAMIONES.get("error"), Toast.LENGTH_SHORT).show();
                 } else if(JSONCAMIONES.has("msj")) {
-                    Camion.deleteAll(context); //cambiar estatus
+                   // Camion.deleteAll(context); //cambiar estatus
                     Toast.makeText(context, (String) JSONCAMIONES.get("msj"), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {

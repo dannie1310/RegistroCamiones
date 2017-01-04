@@ -43,7 +43,7 @@ public class CamaraActivity extends AppCompatActivity {
     private HashMap<String, String> spinnerTiposMap;
     private Spinner tiposSpinner;
     TipoImagenes tipo;
-    Integer idTipo;
+    String idTipo;
     String idcamion;
 
 
@@ -85,7 +85,7 @@ public class CamaraActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 String descripcion = String.valueOf(parent.getItemAtPosition(position));
-                idTipo = Integer.valueOf(spinnerTiposMap.get(descripcion));
+                idTipo = spinnerTiposMap.get(descripcion);
 
             }
 
@@ -104,7 +104,7 @@ public class CamaraActivity extends AppCompatActivity {
                 ContentValues cv = new ContentValues();
                 Integer aux = Integer.valueOf(idcamion);
                 cv.put("idcamion", aux);
-                if (idTipo == 0) {
+                if (idTipo == "") {
                     cv.put("idtipo_imagen", "NULL");
                 } else {
                     cv.put("idtipo_imagen", idTipo);
@@ -113,7 +113,7 @@ public class CamaraActivity extends AppCompatActivity {
                 cv.put("imagen", base64);
                 cv.put("estatus", "1");
 
-                ImagenesViaje imagenesViaje = new ImagenesViaje(CamaraActivity.this);
+                ImagenesCamion imagenesViaje = new ImagenesCamion(CamaraActivity.this);
 
 
                 respuesta = imagenesViaje.create(cv);

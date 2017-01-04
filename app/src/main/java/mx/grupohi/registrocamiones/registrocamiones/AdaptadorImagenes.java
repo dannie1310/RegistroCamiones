@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by Usuario on 22/11/2016.
+ * Created by Usuario on 03/01/2017.
  */
 
 public class AdaptadorImagenes extends BaseAdapter {
@@ -24,12 +24,12 @@ public class AdaptadorImagenes extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return ImagenesViaje.ITEMS.length;
+        return ImagenesCamion.ITEMS.length;
     }
 
     @Override
-    public ImagenesViaje getItem(int position) {
-        return ImagenesViaje.ITEMS[position];
+    public ImagenesCamion getItem(int position) {
+        return ImagenesCamion.ITEMS[position];
     }
 
     @Override
@@ -49,7 +49,7 @@ public class AdaptadorImagenes extends BaseAdapter {
         ImageView imagen = (ImageView) view.findViewById(R.id.imagen);
         TextView nombre = (TextView) view.findViewById(R.id.nombre);
 
-        final ImagenesViaje item = getItem(position);
+        final ImagenesCamion item = getItem(position);
 
 
         System.out.println("selec "+item.getIdDrawable());

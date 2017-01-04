@@ -1,5 +1,6 @@
 package mx.grupohi.registrocamiones.registrocamiones;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -10,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -41,7 +44,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_PHONE_STATE;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -71,10 +78,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.title_login_activity);
         setContentView(R.layout.activity_login);
-
+        checkPermissions();
         mUsuarioView = (AutoCompleteTextView) findViewById(R.id.usuario);
         mPasswordView = (EditText) findViewById(R.id.password);
-        System.out.println("w0: "+mUsuarioView+mPasswordView);
         formLayout = (TextInputLayout) findViewById(R.id.layout);
         mIniciarSesionButton = (Button) findViewById(R.id.iniciar_sesion_button);
 
@@ -276,6 +282,34 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //Tipos Imagenes
+
+                    TipoImagenes tipo = new TipoImagenes(getApplicationContext());
+                    try {
+                        final JSONArray tags = new JSONArray(JSON.getString("tipos_imagen"));
+                        for (int i = 0; i < tags.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressDialog.setMessage("Actualizando catálogo de Tipos de Imagenes... \n  " + finalI + " de " + tags.length());
+                                }
+                            });
+                            JSONObject info = tags.getJSONObject(i);
+
+                            data.clear();
+                            data.put("id", info.getString("id"));
+                            data.put("descripcion", info.getString("descripcion"));
+
+                            if (!tipo.create(data)) {
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                     return true;
                 }
             } catch (Exception e) {
@@ -326,5 +360,31 @@ public class LoginActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
     }
+
+    private Boolean checkPermissions() {
+        Boolean permission_camara = true;
+        Boolean permission_read_external = true;
+        Boolean permission_write_external = true;
+        Boolean internet = true;
+
+
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 100);
+            permission_camara =  false;
+        }
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+            permission_read_external =  false;
+            permission_write_external = false;
+        }
+
+
+        if(!Util.isNetworkStatusAvialable(getApplicationContext())) {
+            Toast.makeText(LoginActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+            internet = false;
+        }
+        return (internet && permission_camara && permission_read_external && permission_write_external);
+    }
+
 }
 

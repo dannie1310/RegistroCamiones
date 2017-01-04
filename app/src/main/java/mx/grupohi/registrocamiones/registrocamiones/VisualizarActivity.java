@@ -33,6 +33,7 @@ import java.util.Locale;
 public class VisualizarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     Usuario usuario;
+    ImagenesCamion icamion;
     TextView economico;
     TextView cu_real;
     TextView cu_pago;
@@ -77,7 +78,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         camion = new Camion(this);
         camion = camion.find(Integer.valueOf(idcamion));
         usuario = new Usuario(getApplicationContext());
-
+        icamion = new ImagenesCamion(getApplicationContext());
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
 
@@ -213,6 +214,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
+                System.out.println("s : "+newDate.toString());
                 vig_licencia.setText(dateFormatter.format(newDate.getTime()));
             }
 
@@ -222,19 +224,25 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         guardar= (Button) findViewById(R.id.buttonGuardar);
         cancelar = (Button) findViewById(R.id.buttonCancelar);
         imagenes = (Button) findViewById(R.id.buttonImagenes);
+        if(icamion.getCount(Integer.valueOf(idcamion))==4){
+            imagenes.setEnabled(false);
+        }
 
         imagenes.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Boolean resp = guardar();
-                Integer cantidad = ImagenesCamion.getCount(getApplicationContext());
-                Intent imagen;
-                if(cantidad.equals(0)){
-                     imagen =new Intent(getApplicationContext(), CamaraActivity.class);
-                }else{
-                     imagen = new Intent(getApplicationContext(), ImagenesActivity.class);
+                if(resp == true) {
+                    Integer cantidad = icamion.getCount(Integer.valueOf(idcamion));
+                    System.out.println("cant: " + cantidad);
+                    Intent imagen;
+                    if (cantidad == 0) {
+                        imagen = new Intent(getApplicationContext(), CamaraActivity.class);
+                    } else {
+                        imagen = new Intent(getApplicationContext(), ImagenesActivity.class);
+                    }
+                    imagen.putExtra("idcamion", idcamion);
+                    startActivity(imagen);
                 }
-                imagen.putExtra("idcamion",idcamion);
-                startActivity(imagen);
             }
         });
 
@@ -249,6 +257,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
               Boolean resp = guardar();
+                if (resp==true){
+                    Intent ok = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(ok);
+                }
+
             }
         });
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -321,10 +334,10 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             r = camion.update(idcamion, data, getApplicationContext());
             if (!r) {
                 Toast.makeText(getApplicationContext(), R.string.error_guardar, Toast.LENGTH_SHORT).show();
-            } else {
+            } /*else {
                 Intent ok = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(ok);
-            }
+            }*/
         }
         return r;
     }
@@ -485,49 +498,41 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         if(TextUtils.isEmpty(sindicatos)) {
             sindicato.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = sindicato;
             cancel = true;
         }
         if(TextUtils.isEmpty(propietarios)) {
             propietario.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = propietario;
             cancel = true;
         }
         if(TextUtils.isEmpty(pcamions)) {
             pcamion.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = pcamion;
             cancel = true;
         }
         if(TextUtils.isEmpty(marcas)) {
             marca.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = marca;
             cancel = true;
         }
         if(TextUtils.isEmpty(modelos)) {
             modelo.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = modelo;
             cancel = true;
         }
         if(TextUtils.isEmpty(anchos)) {
             ancho.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = ancho;
             cancel = true;
         }
         if(TextUtils.isEmpty(largos)) {
             largo.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = largo;
             cancel = true;
         }
         if(TextUtils.isEmpty(gatos)) {
             gato.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = gato;
             cancel = true;
         }
@@ -539,7 +544,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         }
         if(TextUtils.isEmpty(operadors)) {
             operador.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = operador;
             cancel = true;
         }
@@ -551,19 +555,16 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         }
         if(TextUtils.isEmpty(extensions)) {
             extension.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = extension;
             cancel = true;
         }
         if(TextUtils.isEmpty(disminucions)) {
             disminucion.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = disminucion;
             cancel = true;
         }
         if(TextUtils.isEmpty(vig_licencias)) {
             vig_licencia.setError(getString(R.string.error_field_required));
-            System.out.println("vig_licencias");
             focusView = vig_licencia;
             cancel = true;
         }
