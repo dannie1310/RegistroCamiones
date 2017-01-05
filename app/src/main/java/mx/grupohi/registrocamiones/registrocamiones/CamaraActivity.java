@@ -67,8 +67,8 @@ public class CamaraActivity extends AppCompatActivity {
         tipo = new TipoImagenes(getApplicationContext());
         tiposSpinner = (Spinner) findViewById(R.id.spinnerTipos);
 
-        final ArrayList<String> tiposImagenes= tipo.getArrayListTipos();
-        final ArrayList<String> ids = tipo.getArrayListId();
+        final ArrayList<String> tiposImagenes= tipo.getArrayListTipos(Integer.valueOf(idcamion));
+        final ArrayList<String> ids = tipo.getArrayListId(Integer.valueOf(idcamion));
         final String[] spinnerTiposArray = new String[ids.size()];
         spinnerTiposMap = new HashMap<>();
         for (int i = 0; i < ids.size(); i++) {
@@ -100,31 +100,32 @@ public class CamaraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Boolean respuesta = null;
-
-                ContentValues cv = new ContentValues();
-                Integer aux = Integer.valueOf(idcamion);
-                cv.put("idcamion", aux);
-                if (idTipo == "") {
-                    cv.put("idtipo_imagen", "NULL");
-                } else {
-                    cv.put("idtipo_imagen", idTipo);
+                if (idTipo.equals("0")) {
+                    Toast.makeText(getApplicationContext(),R.string.seleccionar_opcion, Toast.LENGTH_SHORT).show();
                 }
-                cv.put("url", mPath);
-                cv.put("imagen", base64);
-                cv.put("estatus", "1");
+                else {
+                    ContentValues cv = new ContentValues();
+                    Integer aux = Integer.valueOf(idcamion);
+                    cv.put("idcamion", aux);
+                    cv.put("idtipo_imagen", idTipo);
 
-                ImagenesCamion imagenesViaje = new ImagenesCamion(CamaraActivity.this);
+                    cv.put("url", mPath);
+                    cv.put("imagen", base64);
+                    cv.put("estatus", "1");
+
+                    ImagenesCamion imagenesViaje = new ImagenesCamion(CamaraActivity.this);
 
 
-                respuesta = imagenesViaje.create(cv);
+                    respuesta = imagenesViaje.create(cv);
 
-                if(respuesta) {
-                    Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();
-                    Intent imagen = new Intent(CamaraActivity.this, ImagenesActivity.class);
-                    imagen.putExtra("idcamion", idcamion);
-                    startActivity(imagen);
-                }else{
-                    Toast.makeText(getApplicationContext(), "Error al guardar imagen", Toast.LENGTH_LONG).show();
+                    if (respuesta) {
+                        Toast.makeText(getApplicationContext(), "Se Guardo la Imagen", Toast.LENGTH_LONG).show();
+                        Intent imagen = new Intent(CamaraActivity.this, ImagenesActivity.class);
+                        imagen.putExtra("idcamion", idcamion);
+                        startActivity(imagen);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error al guardar imagen", Toast.LENGTH_LONG).show();
+                    }
                 }
 
             }

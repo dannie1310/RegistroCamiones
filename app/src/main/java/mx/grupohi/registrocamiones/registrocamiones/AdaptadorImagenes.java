@@ -52,7 +52,6 @@ public class AdaptadorImagenes extends BaseAdapter {
         final ImagenesCamion item = getItem(position);
 
 
-        System.out.println("selec "+item.getIdDrawable());
         String image = item.getIdDrawable();
 
         imagen.setImageBitmap(decodeSampledBitmapFromResource(image, 100, 100));

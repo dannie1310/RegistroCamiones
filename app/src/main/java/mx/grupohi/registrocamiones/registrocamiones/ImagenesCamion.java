@@ -188,13 +188,13 @@ public class ImagenesCamion {
     public static void syncLimit(Context context, int id) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Integer idviaje = getIdViaje(context, id);
+        Integer idviaje = getIdCamion(context, id);
         Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE idcamion = '" + idviaje +"'", null);
 
         try {
 
             Integer imagenes = c.getCount();
-           // System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
+            System.out.println("ELIMINAR*****" + id + "viaje num : "+idviaje+" faltan: "+imagenes);
             if(imagenes == 1){
                 db.execSQL("DELETE FROM imagenes_camion WHERE id= " + idviaje );
             }
@@ -209,7 +209,7 @@ public class ImagenesCamion {
         }
     }
 
-    public static Integer getIdViaje(Context context, Integer idViaje) {
+    public static Integer getIdCamion(Context context, Integer idViaje) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
         Integer resp = 0;

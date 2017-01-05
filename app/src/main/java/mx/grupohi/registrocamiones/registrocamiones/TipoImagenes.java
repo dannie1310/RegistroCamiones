@@ -35,10 +35,10 @@ public class TipoImagenes {
         return result;
     }
 
-    ArrayList<String> getArrayListTipos() {
+    ArrayList<String> getArrayListTipos(Integer idcamion) {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT DISTINCT * FROM tipos_imagenes ORDER BY id ASC", null);
+        Cursor c = db.rawQuery("SELECT DISTINCT * FROM tipos_imagenes WHERE NOT EXISTS (SELECT 1 FROM imagenes_camion WHERE imagenes_camion.idtipo_imagen = tipos_imagenes.id AND imagenes_camion.idcamion = '"+idcamion+"') ORDER BY id ASC", null);
         try {
             if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
@@ -58,10 +58,10 @@ public class TipoImagenes {
         return data;
     }
 
-    ArrayList<String> getArrayListId() {
+    ArrayList<String> getArrayListId(Integer idcamion) {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT DISTINCT * FROM tipos_imagenes ORDER BY id ASC", null);
+        Cursor c = db.rawQuery("SELECT DISTINCT * FROM tipos_imagenes WHERE NOT EXISTS (SELECT 1 FROM imagenes_camion WHERE imagenes_camion.idtipo_imagen = tipos_imagenes.id AND imagenes_camion.idcamion = '"+idcamion+"') ORDER BY id ASC", null);
         try {
             if (c != null && c.moveToFirst()) {
                 if (c.getCount() == 1) {
