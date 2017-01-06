@@ -3,54 +3,79 @@ package mx.grupohi.registrocamiones.registrocamiones;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+public class ImagenesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private String idcamion;
+    private GridView gridView;
+    private AdaptadorImagenes adaptador;
+    List<ImagenesCamion> lista;
+    ImageButton button;
+    ProgressDialog progressDialogSync;
+    private Intent visualizar;
 
     Usuario usuario;
-    Button buttonRevizar;
-    Camion camion;
-    Spinner camiones;
-    String idcamion;
-    private HashMap<String, String> spinnerMap;
-    private ProgressDialog progressDialogSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        usuario = new Usuario(getApplicationContext());
-        buttonRevizar =(Button) findViewById(R.id.buttonRevizar);
+        setContentView(R.layout.activity_imagenes);
+        visualizar =new Intent(this, VisualizarActivity.class);
+        usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
+        idcamion= getIntent().getStringExtra("idcamion");
+        ImagenesCamion m = new ImagenesCamion(this);
+        m.getImagen(Integer.parseInt(idcamion));
+        int numImagenes = m.getCount(Integer.parseInt(idcamion));
+        button= (ImageButton) findViewById(R.id.imageButton);
+        button.setEnabled(true);
+        if(numImagenes != 4){
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), CamaraActivity.class);
+                    intent.putExtra("idcamion", idcamion);
+                    startActivity(intent);
+                }
+            });
+        }else{
+            button.setVisibility(View.GONE);
+        }
+        gridView = (GridView) findViewById(R.id.grid);
+        adaptador = new AdaptadorImagenes(getApplicationContext());
+        gridView.setAdapter(adaptador);
+        gridView.setOnItemClickListener(this);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
         if(drawer != null)
             drawer.post(new Runnable() {
                 @Override
@@ -73,89 +98,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-
-        camion = new Camion(this);
-
-        camiones = (Spinner) findViewById(R.id.spinnerCamiones);
-
-        final ArrayList<String> descripcionesCamiones = camion.getArrayListDescripciones();
-        final ArrayList <String> idsCamiones = camion.getArrayListId();
-
-        final String[] spinnerArray = new String[idsCamiones.size()];
-        spinnerMap = new HashMap<>();
-
-        for (int i = 0; i < idsCamiones.size(); i++) {
-            spinnerMap.put(descripcionesCamiones.get(i), idsCamiones.get(i));
-            spinnerArray[i] = descripcionesCamiones.get(i);
-        }
-
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerArray);
-        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        camiones.setAdapter(arrayAdapter);
-
-        camiones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String placa = camiones.getSelectedItem().toString();
-                idcamion = spinnerMap.get(placa);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        buttonRevizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(idcamion == "0"){
-                    Toast.makeText(getApplicationContext(), "Por Favor Seleccione un Camión de la Lista", Toast.LENGTH_SHORT).show();
-                    camiones.requestFocus();
-                }else {
-                    Intent visualizar = new Intent(getApplicationContext(), VisualizarActivity.class);
-                    visualizar.putExtra("idcamion", idcamion);
-                    startActivity(visualizar);
-                }
-            }
-        });
     }
+
+
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        Integer list = getIntent().getIntExtra("list", 0);
+        if(list == 1) {
+            super.onBackPressed();
         } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
+            Intent intent = new Intent(getApplicationContext(), VisualizarActivity.class);
+            intent.putExtra("idcamion", idcamion);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }*/
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ImagenesCamion item = (ImagenesCamion) parent.getItemAtPosition(position);
+        Intent intent = new Intent(this, ImagenDetalle.class);
+        intent.putExtra(ImagenDetalle.EXTRA_PARAM_ID, item.getId());
 
-        return super.onOptionsItemSelected(item);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            ActivityOptionsCompat activityOptions =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            this,
+                            new Pair<View, String>(view.findViewById(R.id.imagen),
+                                    ImagenDetalle.VIEW_NAME_HEADER_IMAGE)
+                    );
+
+            ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+        } else
+            startActivity(intent);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -164,11 +146,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+            Intent main = new Intent(this,MainActivity.class);
+            startActivity(main);
         } else if (id == R.id.nav_sync) {
-            new AlertDialog.Builder(MainActivity.this)
+            new AlertDialog.Builder(ImagenesActivity.this)
                     .setTitle("¡ADVERTENCIA!")
                     .setMessage("¿Deséas continuar con la sincronización?")
                     .setNegativeButton("NO", null)
@@ -176,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override public void onClick(DialogInterface dialog, int which) {
                             if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                 if(!Camion.isSync(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(ImagenesActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
@@ -189,16 +170,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .create()
                     .show();
         } else if (id == R.id.nav_logout) {
-
             if(!Camion.isSync(getApplicationContext())){
-                new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(ImagenesActivity.this)
                         .setTitle("¡ADVERTENCIA!")
-                        .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
+                        .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo, \n ¿Deséas sincronizar?")
                         .setNegativeButton("NO", null)
                         .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(ImagenesActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
 
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);

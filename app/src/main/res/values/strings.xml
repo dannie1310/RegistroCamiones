@@ -9,7 +9,7 @@
     <string name="error_internet">Por favor habilite su conexión a Internet para poder iniciar sesión</string>
     <string name="URL">http://sca.grupohi.mx/android20151106.php</string>
     <string name="general_exception">Por favor verifique su conexión a internet e intentelo nuevamente</string>
-    <string name="title_activity_main">Registrar TAG</string>
+    <string name="title_activity_main">Registrar Camiones</string>
     <string name="title_login_activity">Iniciar Sesión</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -32,4 +32,14 @@
     <string name="text_turn_on_nfc">La aplicación no funciona si el adaptador NFC está apagado. Por favor encienda el adaptador NFC en la configuración del dispositivo.</string>
     <string name="text_update_settings">Encender Ahora</string>
     <string name="title_activity_sync">SyncActivity</string>
+    <string name="title_activity_visualizar">Visualizar Detalles del Camión</string>
+    <string name="error_guardar">Error al guardar el registro</string>
+    <string name="ningun_cambio">No se generó ningun cambio</string>
+
+    <!--Imagenes-->
+    <string name="nombre_transicion_imagen">imagen_compartida</string>
+    <string name="contentImagen">Imagen Tomada</string>
+    <string name="title_activity_imagenes">IMAGENES DEL CAMIÓN</string>
+    <string name="title_activity_descarga">Descarga de Catálogos</string>
+    <string name="seleccionar_opcion">Debes Seleccionar un Tipo de Imagen</string>
 </resources>

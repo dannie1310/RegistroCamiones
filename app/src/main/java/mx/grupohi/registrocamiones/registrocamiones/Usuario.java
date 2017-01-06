@@ -4,11 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
 
 
 class Usuario {
 
-    private static String usr;
+
+
+
+    static String usr;
     private static String bd;
     private static String proyecto;
     private Context context;
@@ -16,8 +23,16 @@ class Usuario {
     private static SQLiteDatabase db;
     private static DBScaSqlite db_sca;
 
-    private String name;
-    private String pass;
+    String name;
+    String pass;
+
+    Integer idUsuario;
+    Integer idProyecto;
+
+    String nombre;
+    String baseDatos;
+    String descripcionBaseDatos;
+    String empresa;
 
     Usuario(Context context) {
         this.context = context;
@@ -29,6 +44,29 @@ class Usuario {
         try{
             return db.insert("user", null, values) > -1;
         } finally {
+            db.close();
+        }
+    }
+
+    Usuario getUsuario() {
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idUsuario = c.getInt(c.getColumnIndex("idusuario"));
+                this.idProyecto = c.getInt(c.getColumnIndex("idproyecto"));
+                this.nombre = c.getString(c.getColumnIndex("nombre"));
+                this.baseDatos = c.getString(c.getColumnIndex("base_datos"));
+                this.descripcionBaseDatos = c.getString(c.getColumnIndex("descripcion_database"));
+                this.usr = c.getString(c.getColumnIndex("usr"));
+                this.pass = c.getString(c.getColumnIndex("pass"));
+
+                return this;
+            } else {
+                return null;
+            }
+        }finally {
+            c.close();
             db.close();
         }
     }
@@ -139,4 +177,17 @@ class Usuario {
             db.close();
         }
     }
+
+    public static String encodeToBase64Imagen(Bitmap image, int quality)
+    {
+
+        Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        String respuesta = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        respuesta = respuesta.replace("\n","");
+        return respuesta;
+    }
+
+
 }
