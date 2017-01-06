@@ -24,6 +24,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private JSONObject JSONCAMIONES;
     private JSONObject JSON;
     Integer imagenesRegistradas = 0;
+    Integer imagenesTotales = 0;
 
     Sync(Context context, ProgressDialog progressDialog) {
 
@@ -61,7 +62,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 System.out.println("JSON: "+String.valueOf(values));
                 ContentValues aux = new ContentValues();
                 int i = 0;
-               // while (ImagenesCamion.getCount(context) != 0) {
+                imagenesTotales= ImagenesCamion.getCount(context);
+
+                while (ImagenesCamion.getCount(context) != 0) {
                     i++;
                     JSON = null;
                     //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
@@ -88,7 +91,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                //}
+                }
 
             }catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
@@ -108,7 +111,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                     Toast.makeText(context, (String) JSONCAMIONES.get("error"), Toast.LENGTH_SHORT).show();
                 } else if(JSONCAMIONES.has("msj")) {
                     Camion.deleteAll(context); //cambiar estatus
-                    Toast.makeText(context, (String) JSONCAMIONES.get("msj"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, (String) JSONCAMIONES.get("msj") + ".  Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
