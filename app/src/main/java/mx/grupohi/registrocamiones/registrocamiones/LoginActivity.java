@@ -309,6 +309,34 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    Sindicato sindicato = new Sindicato(getApplicationContext());
+                    try {
+                        final JSONArray sindicatos = new JSONArray(JSON.getString("sindicatos"));
+                        for (int i = 0; i < sindicatos.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressDialog.setMessage("Actualizando catálogo de sindicatos... \n Sindicato " + finalI + " de " + sindicatos.length());
+                                }
+                            });
+
+                            JSONObject sind = sindicatos.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idsindicato", sind.getString("id"));
+                            data.put("descripcion", sind.getString("sindicato"));
+
+                            System.out.println("q "+sind);
+                            if(!sindicato.create(data)){
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
 
                     return true;
                 }

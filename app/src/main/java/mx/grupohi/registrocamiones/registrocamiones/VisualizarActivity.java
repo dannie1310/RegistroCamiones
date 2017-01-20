@@ -20,14 +20,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class VisualizarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -37,7 +42,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     TextView economico;
     TextView cu_real;
     TextView cu_pago;
-    EditText sindicato;
     EditText empresa;
     EditText propietario;
     EditText pcamion;
@@ -58,9 +62,14 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     Button cancelar;
     Button imagenes;
     String idcamion;
+    String idSindicato;
+    Spinner spinner;
+    private HashMap<String, String> spinnerMap;
+    Sindicato sindicato;
     Camion camion;
-
+    String nombre;
     Double cubicacion;
+    String numSindicato;
 
     private DatePickerDialog vigenciaDatePickerDialog;
 
@@ -80,13 +89,54 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         usuario = new Usuario(getApplicationContext());
         icamion = new ImagenesCamion(getApplicationContext());
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        sindicato = new Sindicato(getApplicationContext());
+        sindicato = sindicato.find(camion.sindicato);
+        numSindicato = camion.sindicato;
+        System.out.println("d: "+sindicato.idsindicato);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        final ArrayList<String> nombres = sindicato.getArrayListNombres();
+        final ArrayList<String> ids = sindicato.getArrayListId();
+
+        String[] spinnerArray = new String[ids.size()];
+        spinnerMap = new HashMap<>();
+
+        for (int i = 0; i < ids.size(); i++) {
+            spinnerMap.put(nombres.get(i), ids.get(i));
+            spinnerArray[i] = nombres.get(i);
+        }
+
+        final ArrayAdapter<String> a = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, spinnerArray);
+        a.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        spinner.setAdapter(a);
+        if(numSindicato !=  null) {
+            spinner.setSelection(getIndex(spinner, numSindicato));
+        }
 
 
+        if (spinner != null) {
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    nombre = spinner.getSelectedItem().toString();
+                    idSindicato = spinnerMap.get(nombre);
+                    System.out.println("add: " + idSindicato + nombre);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
         economico = (TextView) findViewById(R.id.textViewCamion);
         economico.setText(camion.economico);
 
-        sindicato = (EditText) findViewById(R.id.textViewSindicato);
-        sindicato.setText(camion.sindicato);
+        /*sindicato = (EditText) findViewById(R.id.textViewSindicato);
+        sindicato.setText(camion.sindicato);*/
 
         empresa = (EditText) findViewById(R.id.textViewEmpresa);
         empresa.setText(camion.empresa);
@@ -296,6 +346,17 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    private int getIndex(Spinner spinner, String myString){
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).equals(myString)){
+                index = i;
+            }
+        }
+        return index;
+    }
     public Boolean guardar(){
          /* if(camion.sindicato.equals(String.valueOf(sindicato.getText())) && camion.placasC.equals(String.valueOf(pcamion.getText())) && camion.pCaja.equals(String.valueOf(pcaja.getText())) && camion.empresa.equals(String.valueOf(empresa.getText())) && camion.propietario.equals(String.valueOf(propietario.getText())) && camion.operador.equals(String.valueOf(operador.getText())) && camion.licencia.equals(String.valueOf(licencia.getText())) && camion.vigencia_licencia.equals(String.valueOf(vig_licencia.getText())) && camion.modelo.equals(String.valueOf(modelo.getText())) && camion.marca.equals(String.valueOf(marca.getText())) && String.valueOf(camion.ancho).equals(String.valueOf(ancho.getText())) && String.valueOf(camion.largo).equals(String.valueOf(largo.getText())) && String.valueOf(camion.alto).equals(String.valueOf(alto.getText())) && String.valueOf(camion.gato).equals(String.valueOf(gato.getText())) && String.valueOf(camion.extension).equals(String.valueOf(extension.getText())) && String.valueOf(camion.disminucion).equals(String.valueOf(disminucion.getText()))){
                         Toast.makeText(getApplicationContext(), R.string.ningun_cambio, Toast.LENGTH_SHORT).show();
@@ -307,8 +368,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
             System.out.println("cubicacion: " + Math.ceil(cubicacion));
             ContentValues data = new ContentValues();
-
-            data.put("sindicato", String.valueOf(sindicato.getText()).replaceAll(" +"," ").trim());
+            if(idSindicato != String.valueOf(0)) {
+                data.put("sindicato", String.valueOf(nombre.replaceAll(" +", " ").trim()));
+            }else {
+                data.put("sindicato", String.valueOf(idSindicato.replaceAll(" +", " ").trim()));
+            }
             data.put("empresa", String.valueOf(empresa.getText()).replaceAll(" +"," ").trim());
             data.put("propietario", String.valueOf(propietario.getText()).replaceAll(" +"," ").trim());
             data.put("operador", String.valueOf(operador.getText()).replaceAll(" +"," ").trim());
@@ -456,7 +520,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
         //Reset Errors
 
-        sindicato.setError(null);
+        //sindicato.setError(null);
         empresa.setError(null);
         propietario.setError(null);
         pcamion.setError(null);
@@ -475,7 +539,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         vig_licencia.setError(null);
 
         // Store values at the time of the login attempt.
-        final String sindicatos = sindicato.getText().toString();
+        //final String sindicatos = sindicato.getText().toString();
        // final String empresas = empresa.getText().toString();
         final String propietarios = propietario.getText().toString();
         final String pcamions = pcamion.getText().toString();
@@ -496,11 +560,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         boolean cancel = false;
         View focusView = null;
 
-        if(TextUtils.isEmpty(sindicatos)) {
+        /*if(TextUtils.isEmpty(sindicatos)) {
             sindicato.setError(getString(R.string.error_field_required));
             focusView = sindicato;
             cancel = true;
-        }
+        }*/
         if(TextUtils.isEmpty(propietarios)) {
             propietario.setError(getString(R.string.error_field_required));
             focusView = propietario;
