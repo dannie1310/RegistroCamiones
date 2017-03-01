@@ -51,9 +51,11 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             if (Camion.getCount(context) != 0) {
                 JSONObject Obj = Camion.getJSON(context);
                 values.put("camiones_editados", String.valueOf(Obj));
-
             }
-
+            if ( Camion.getCountInactivos(context) != 0){
+                JSONObject inactivos = Camion.getJSONInactivos(context);
+                values.put("solicitud_activacion", String.valueOf(inactivos));
+            }
 
             try {
 
@@ -63,7 +65,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 ContentValues aux = new ContentValues();
                 int i = 0;
                 imagenesTotales= ImagenesCamion.getCount(context);
-
+                System.out.println("JSON2: "+JSONCAMIONES);
                 while (ImagenesCamion.getCount(context) != 0) {
                     i++;
                     JSON = null;
@@ -85,6 +87,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                                     imagenesRegistradas++;
                                 }
                             }
+                            System.out.println("JSON3: "+JSON);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
