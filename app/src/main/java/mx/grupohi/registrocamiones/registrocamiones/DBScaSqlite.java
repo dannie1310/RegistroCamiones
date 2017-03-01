@@ -11,7 +11,7 @@ public class DBScaSqlite extends SQLiteOpenHelper {
     private String[] queries = new String[] {
 
             "CREATE TABLE user (idusuario INTEGER PRIMARY KEY, nombre TEXT, usr TEXT, pass TEXT, idproyecto INTEGER, base_datos TEXT, descripcion_database TEXT)",
-            "CREATE TABLE camiones (idcamion INTEGER,sindicato TEXT, empresa TEXT,propietario TEXT, operador TEXT, licencia TEXT, economico TEXT, placas_camion TEXT, placas_caja TEXT,  marca TEXT, modelo TEXT, ancho REAL, largo REAL, alto REAL, espacio_gato REAL, altura_extension REAL, disminucion REAL, cubicacion_real REAL, cubicacion_para_pago REAL,  estatus INTEGER, vigencia_licencia TEXT)",
+            "CREATE TABLE camiones (idcamion INTEGER,sindicato TEXT, empresa TEXT,propietario TEXT, operador TEXT, licencia TEXT, economico TEXT, placas_camion TEXT, placas_caja TEXT,  marca TEXT, modelo TEXT, ancho REAL, largo REAL, alto REAL, espacio_gato REAL, altura_extension REAL, disminucion REAL, cubicacion_real REAL, cubicacion_para_pago REAL,  estatus INTEGER, vigencia_licencia TEXT, estatus_camion INTEGER)",
             "CREATE TABLE tipos_imagenes (id TEXT, descripcion TEXT);",
             "CREATE TABLE imagenes_camion (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idtipo_imagen TEXT, url TEXT, imagen BLOB, estatus INTEGER);",
             "CREATE TABLE sindicatos (idsindicato INTEGER PRIMARY KEY, descripcion TEXT);",

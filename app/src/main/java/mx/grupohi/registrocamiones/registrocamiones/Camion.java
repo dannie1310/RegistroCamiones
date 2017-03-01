@@ -37,6 +37,7 @@ public class Camion {
     public Double cu_pago;
     public Integer estatus;
     public String vigencia_licencia;
+    public Integer estatus_camion;
 
     private Context context;
 
@@ -83,6 +84,7 @@ public class Camion {
                 this.cu_pago = c.getDouble(18);
                 this.estatus = c.getInt(19);
                 this.vigencia_licencia = c.getString(20);
+                this.estatus_camion = c.getInt(21);
 
                 return this;
             } else {
@@ -115,7 +117,7 @@ public class Camion {
     ArrayList<String> getArrayListId() {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * from camiones ORDER BY idcamion ASC", null);
+        Cursor c = db.rawQuery("SELECT * from camiones WHERE estatus_camion = 1 ORDER BY idcamion ASC", null);
         if (c != null && c.moveToFirst())
             try {
                 if (c.getCount() == 1) {
@@ -137,7 +139,7 @@ public class Camion {
     ArrayList<String> getArrayListDescripciones() {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM camiones ORDER BY idcamion ASC", null);
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus_camion = 1 ORDER BY idcamion ASC", null);
         if (c != null && c.moveToFirst())
             try {
                 if (c.getCount() == 1) {
@@ -271,5 +273,49 @@ public class Camion {
         } finally {
             db.close();
         }
+    }
+
+    ArrayList<String> getArrayListIdInactivo() {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * from camiones WHERE estatus_camion = 0 ORDER BY idcamion ASC", null);
+        if (c != null && c.moveToFirst())
+            try {
+                if (c.getCount() == 1) {
+                    data.add(c.getString(c.getColumnIndex("idcamion")));
+                } else {
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idcamion")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("idcamion")));
+                    }
+                }
+            } finally {
+                c.close();
+                db.close();
+            }
+        return data;
+    }
+
+    ArrayList<String> getArrayListDescripcionesInactivo() {
+        ArrayList<String> data = new ArrayList<>();
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus_camion = 0 ORDER BY idcamion ASC", null);
+        if (c != null && c.moveToFirst())
+            try {
+                if (c.getCount() == 1) {
+                    data.add(c.getString(c.getColumnIndex("economico")));
+                } else {
+                    data.add("-- Seleccione --");
+                    data.add(c.getString(c.getColumnIndex("economico")));
+                    while (c.moveToNext()) {
+                        data.add(c.getString(c.getColumnIndex("economico")));
+                    }
+                }
+            } finally {
+                c.close();
+                db.close();
+            }
+        return data;
     }
 }

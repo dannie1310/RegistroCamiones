@@ -36,7 +36,6 @@
             android:label="@string/title_activity_visualizar"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ImagenDetalle"
             android:screenOrientation="portrait" />
@@ -47,7 +46,11 @@
             android:name=".ImagenesActivity"
             android:label="@string/title_activity_imagenes"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReactivacionActivity"
+            android:label="@string/title_activity_reactivacion"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

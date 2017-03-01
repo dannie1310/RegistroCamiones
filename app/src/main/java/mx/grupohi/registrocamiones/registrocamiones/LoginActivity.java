@@ -273,6 +273,7 @@ public class LoginActivity extends AppCompatActivity {
                             data.put("cubicacion_para_pago",  camion.getString("cubicacion_para_pago"));
                             data.put("estatus",  "0");
                             data.put("vigencia_licencia",  camion.getString("vigencia_licencia"));
+                            data.put("estatus_camion",camion.getString(""));
                             System.out.println("q "+camion);
                             if(!camionModel.create(data)){
                                 return false;

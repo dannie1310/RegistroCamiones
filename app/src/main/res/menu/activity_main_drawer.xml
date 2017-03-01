@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_action_home"
             android:title="Inicio" />
         <item
+            android:id="@+id/nav_re"
+            android:icon="@drawable/ic_action_name"
+            android:title="Reactivar Camión" />
+        <item
             android:id="@+id/nav_sync"
             android:icon="@drawable/ic_action_sync"
             android:title="Sincronizar camiones" />

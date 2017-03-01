@@ -42,4 +42,5 @@
     <string name="title_activity_imagenes">IMAGENES DEL CAMIÓN</string>
     <string name="title_activity_descarga">Descarga de Catálogos</string>
     <string name="seleccionar_opcion">Debes Seleccionar un Tipo de Imagen</string>
+    <string name="title_activity_reactivacion">ReactivacionActivity</string>
 </resources>

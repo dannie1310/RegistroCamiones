@@ -70,6 +70,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     String nombre;
     Double cubicacion;
     String numSindicato;
+    String activar;
 
     private DatePickerDialog vigenciaDatePickerDialog;
 
@@ -83,7 +84,8 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         idcamion = getIntent().getStringExtra("idcamion");
-        System.out.println("camion: " +idcamion);
+        activar = getIntent().getStringExtra("reactivar");
+        System.out.println("camion: " +idcamion+" : "+activar);
         camion = new Camion(this);
         camion = camion.find(Integer.valueOf(idcamion));
         usuario = new Usuario(getApplicationContext());
@@ -394,7 +396,12 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
 
             System.out.println("guardar: " + data);
-
+            if(activar == null){
+                System.out.println("camion");
+            }
+            else if(activar.equals("1")){
+                System.out.println("camion inactivo");
+            }
             r = camion.update(idcamion, data, getApplicationContext());
             if (!r) {
                 Toast.makeText(getApplicationContext(), R.string.error_guardar, Toast.LENGTH_SHORT).show();

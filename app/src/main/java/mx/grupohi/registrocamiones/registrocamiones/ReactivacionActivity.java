@@ -23,26 +23,28 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ReactivacionActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     Usuario usuario;
+    private ProgressDialog progressDialogSync;
     Button buttonRevizar;
     Camion camion;
     Spinner camiones;
     String idcamion;
     private HashMap<String, String> spinnerMap;
-    private ProgressDialog progressDialogSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_reactivacion);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         usuario = new Usuario(getApplicationContext());
         buttonRevizar =(Button) findViewById(R.id.buttonRevizar);
 
@@ -74,12 +76,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         camion = new Camion(this);
 
         camiones = (Spinner) findViewById(R.id.spinnerCamiones);
 
-        final ArrayList<String> descripcionesCamiones = camion.getArrayListDescripciones();
-        final ArrayList <String> idsCamiones = camion.getArrayListId();
+        final ArrayList<String> descripcionesCamiones = camion.getArrayListDescripcionesInactivo();
+        final ArrayList <String> idsCamiones = camion.getArrayListIdInactivo();
 
         final String[] spinnerArray = new String[idsCamiones.size()];
         spinnerMap = new HashMap<>();
@@ -88,7 +93,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             spinnerMap.put(descripcionesCamiones.get(i), idsCamiones.get(i));
             spinnerArray[i] = descripcionesCamiones.get(i);
         }
-
+        try {
+            Util.copyDataBase(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerArray);
         arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         camiones.setAdapter(arrayAdapter);
@@ -105,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         buttonRevizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }else {
                     Intent visualizar = new Intent(getApplicationContext(), VisualizarActivity.class);
                     visualizar.putExtra("idcamion", idcamion);
+                    visualizar.putExtra("reactivar", "1");
                     startActivity(visualizar);
                 }
             }
@@ -129,18 +137,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
+            super.onBackPressed();
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }*/
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -164,14 +165,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            Intent re  = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(re);
+        } else if (id == R.id.nav_re){
             Intent intent = getIntent();
             finish();
             startActivity(intent);
-        } else if (id == R.id.nav_re){
-            Intent re  = new Intent(getApplicationContext(),ReactivacionActivity.class);
-            startActivity(re);
         } else if (id == R.id.nav_sync) {
-            new AlertDialog.Builder(MainActivity.this)
+            new AlertDialog.Builder(ReactivacionActivity.this)
                     .setTitle("¡ADVERTENCIA!")
                     .setMessage("¿Deséas continuar con la sincronización?")
                     .setNegativeButton("NO", null)
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override public void onClick(DialogInterface dialog, int which) {
                             if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                 if(!Camion.isSync(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(ReactivacionActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
@@ -194,14 +195,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_logout) {
 
             if(!Camion.isSync(getApplicationContext())){
-                new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(ReactivacionActivity.this)
                         .setTitle("¡ADVERTENCIA!")
                         .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
                         .setNegativeButton("NO", null)
                         .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(ReactivacionActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
 
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
