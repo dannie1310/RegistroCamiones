@@ -112,6 +112,7 @@ public class CamaraActivity extends AppCompatActivity {
                     cv.put("imagen", base64);
                     cv.put("estatus", "1");
 
+
                     ImagenesCamion imagenesViaje = new ImagenesCamion(CamaraActivity.this);
 
 

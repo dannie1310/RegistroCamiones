@@ -85,7 +85,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         setSupportActionBar(toolbar);
         idcamion = getIntent().getStringExtra("idcamion");
         activar = getIntent().getStringExtra("reactivar");
-        System.out.println("camion: " +idcamion+" : "+activar);
         camion = new Camion(this);
         camion = camion.find(Integer.valueOf(idcamion));
         usuario = new Usuario(getApplicationContext());
@@ -94,7 +93,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         sindicato = new Sindicato(getApplicationContext());
         sindicato = sindicato.find(camion.sindicato);
         numSindicato = camion.sindicato;
-        System.out.println("d: "+sindicato.idsindicato);
 
         spinner = (Spinner) findViewById(R.id.spinner);
 
@@ -125,7 +123,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
                     nombre = spinner.getSelectedItem().toString();
                     idSindicato = spinnerMap.get(nombre);
-                    System.out.println("add: " + idSindicato + nombre);
                 }
 
                 @Override
@@ -178,7 +175,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                                      @Override
                                      public void onFocusChange(View v, boolean hasFocus) {
                                          cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                                         System.out.println("2cubicacion: " + Math.ceil(cubicacion));
                                          cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
                                          cu_real.setText(String.valueOf(redondear(cubicacion)));
                                      }
@@ -190,7 +186,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                System.out.println("2cubicacion: " + Math.ceil(cubicacion));
+                //System.out.println("2cubicacion: " + Math.ceil(cubicacion));
                 cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
                 cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
@@ -203,7 +199,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                System.out.println("2cubicacion: " + Math.ceil(cubicacion));
+                //System.out.println("2cubicacion: " + Math.ceil(cubicacion));
                 cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
                 cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
@@ -215,7 +211,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                System.out.println("2cubicacion: " + Math.ceil(cubicacion));
+                //System.out.println("2cubicacion: " + Math.ceil(cubicacion));
                 cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
                 cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
@@ -227,7 +223,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                System.out.println("2cubicacion: " + Math.ceil(cubicacion));
+                //System.out.println("2cubicacion: " + Math.ceil(cubicacion));
                 cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
                 cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
@@ -239,7 +235,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-                System.out.println("2cubicacion: " + Math.ceil(cubicacion));
+                //System.out.println("2cubicacion: " + Math.ceil(cubicacion));
                 cu_pago.setText(String.valueOf(Math.round(redondear(cubicacion))));
                 cu_real.setText(String.valueOf(redondear(cubicacion)));
             }
@@ -266,7 +262,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                System.out.println("s : "+newDate.toString());
                 vig_licencia.setText(dateFormatter.format(newDate.getTime()));
             }
 
@@ -285,7 +280,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                 Boolean resp = guardar();
                 if(resp == true) {
                     Integer cantidad = icamion.getCount(Integer.valueOf(idcamion));
-                    System.out.println("cant: " + cantidad);
                     Intent imagen;
                     if (cantidad == 0) {
                         imagen = new Intent(getApplicationContext(), CamaraActivity.class);
@@ -309,15 +303,13 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
               Boolean resp = guardar();
-                System.out.println("camion"+activar);
+                //System.out.println("camion"+activar);
                 if (resp==true){
                     if(activar == null){
-                        System.out.println("camion");
                         Intent ok = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(ok);
                     }
-                    else if(activar.equals("1")){
-                        System.out.println("camion inactivo");
+                    else if(activar.equals("1")){//"camion inactivo"
                         Intent ok = new Intent(getApplicationContext(), ReactivacionActivity.class);
                         startActivity(ok);
                     }
@@ -376,9 +368,9 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         }*/
         Boolean r = false;
         if(!checar()) {
-            System.out.println("w: " + camion.idCamion + " economico: " + economico.getText()); //guardar (update) Camion.update
+            //System.out.println("w: " + camion.idCamion + " economico: " + economico.getText()); //guardar (update) Camion.update
             cubicacion = setCubicacion(String.valueOf(ancho.getText()), String.valueOf(alto.getText()), String.valueOf(largo.getText()), String.valueOf(extension.getText()), String.valueOf(gato.getText()), String.valueOf(disminucion.getText()));
-            System.out.println("cubicacion: " + Math.ceil(cubicacion));
+            //System.out.println("cubicacion: " + Math.ceil(cubicacion));
             ContentValues data = new ContentValues();
             if(idSindicato != String.valueOf(0)) {
                 data.put("sindicato", String.valueOf(nombre.replaceAll(" +", " ").trim()));
@@ -405,7 +397,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             data.put("estatus", "1");
             data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
 
-            System.out.println("guardar: " + data);
+            //System.out.println("guardar: " + data);
 
             r = camion.update(idcamion, data, getApplicationContext());
             if (!r) {
@@ -420,7 +412,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
 
     public Double setCubicacion(String ancho, String alto, String largo, String extension, String gato, String disminucion) {
         Double r = Double.valueOf(ancho) * Double.valueOf(largo) * (Double.valueOf(alto) + Double.valueOf(extension)) - Double.valueOf(gato) - Double.valueOf(disminucion);
-        System.out.println(Double.valueOf(ancho)+" * "+ Double.valueOf(largo) +" * " +(Double.valueOf(alto)+" + "+Double.valueOf(extension)) +" - "+ Double.valueOf(gato)+" - "+ Double.valueOf(disminucion)+" = "+ r);
+        //System.out.println(Double.valueOf(ancho)+" * "+ Double.valueOf(largo) +" * " +(Double.valueOf(alto)+" + "+Double.valueOf(extension)) +" - "+ Double.valueOf(gato)+" - "+ Double.valueOf(disminucion)+" = "+ r);
         return r;
     }
 
@@ -614,7 +606,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         }
         if(TextUtils.isEmpty(altos)) {
             alto.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = alto;
             cancel = true;
         }
@@ -625,7 +616,6 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         }
         if(TextUtils.isEmpty(licencias)) {
             licencia.setError(getString(R.string.error_field_required));
-            System.out.println("prueba1");
             focusView = licencia;
             cancel = true;
         }

@@ -112,6 +112,10 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
         } else {
             Intent intent = new Intent(getApplicationContext(), VisualizarActivity.class);
             intent.putExtra("idcamion", idcamion);
+            if(Camion.estatusCamion(Integer.valueOf(idcamion),getApplicationContext())==0){
+                intent.putExtra("reactivar", "1");
+            }
+
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }

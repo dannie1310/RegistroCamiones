@@ -116,6 +116,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                     Camion.deleteAll(context); //cambiar estatus
                     Toast.makeText(context, (String) JSONCAMIONES.get("msj") + ".  Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();
                 }
+
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

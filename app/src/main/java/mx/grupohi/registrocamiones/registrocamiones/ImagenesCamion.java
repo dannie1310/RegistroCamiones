@@ -171,6 +171,8 @@ public class ImagenesCamion {
                     json.put("idImagen", c.getInt(0));
                     json.put("idtipo_imagen", c.getString(2));
                     json.put("idcamion", c.getString(1));
+                    System.out.println("Estatus camion: "+ Camion.estatusCamion(c.getInt(1),context));
+                    json.put("estatus", String.valueOf(Camion.estatusCamion(c.getInt(1),context)));
                     json.put("imagen", c.getString(4));
                     JSON.put(i + "", json);
                     i++;

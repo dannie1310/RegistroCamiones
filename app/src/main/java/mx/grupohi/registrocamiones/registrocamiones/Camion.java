@@ -114,6 +114,24 @@ public class Camion {
         }
     }
 
+    public static Integer estatusCamion(Integer idCamion, Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE idcamion = '" + idCamion + "'", null);
+        try {
+            if (c != null && c.moveToFirst()) {
+                Integer estatus_camion = c.getInt(c.getColumnIndex("estatus_camion"));
+                return estatus_camion;
+            } else {
+                return null;
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
     ArrayList<String> getArrayListId() {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
