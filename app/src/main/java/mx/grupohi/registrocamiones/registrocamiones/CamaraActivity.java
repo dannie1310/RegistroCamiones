@@ -52,7 +52,6 @@ public class CamaraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
         idcamion = getIntent().getStringExtra("idcamion");
-        System.out.println("camion: " +idcamion);
 
         mSetImage = (ImageView) findViewById(R.id.set_picture);
         mRlView = (RelativeLayout) findViewById(R.id.activity_camara);

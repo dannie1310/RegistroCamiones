@@ -309,9 +309,19 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
               Boolean resp = guardar();
+                System.out.println("camion"+activar);
                 if (resp==true){
-                    Intent ok = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(ok);
+                    if(activar == null){
+                        System.out.println("camion");
+                        Intent ok = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(ok);
+                    }
+                    else if(activar.equals("1")){
+                        System.out.println("camion inactivo");
+                        Intent ok = new Intent(getApplicationContext(), ReactivacionActivity.class);
+                        startActivity(ok);
+                    }
+
                 }
 
             }
@@ -396,12 +406,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             data.put("vigencia_licencia", String.valueOf(vig_licencia.getText()).replaceAll(" +"," ").trim());
 
             System.out.println("guardar: " + data);
-            if(activar == null){
-                System.out.println("camion");
-            }
-            else if(activar.equals("1")){
-                System.out.println("camion inactivo");
-            }
+
             r = camion.update(idcamion, data, getApplicationContext());
             if (!r) {
                 Toast.makeText(getApplicationContext(), R.string.error_guardar, Toast.LENGTH_SHORT).show();

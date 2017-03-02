@@ -4,16 +4,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_action_home"
-            android:title="Inicio" />
+            android:icon="@drawable/ic_action_registrar"
+            android:title="Registrar Camiones" />
         <item
             android:id="@+id/nav_re"
             android:icon="@drawable/ic_action_name"
-            android:title="Reactivar Camión" />
+            android:title="Reactivar Camiones" />
         <item
             android:id="@+id/nav_sync"
             android:icon="@drawable/ic_action_sync"
-            android:title="Sincronizar camiones" />
+            android:title="Sincronizar Camiones" />
 
     </group>
 
