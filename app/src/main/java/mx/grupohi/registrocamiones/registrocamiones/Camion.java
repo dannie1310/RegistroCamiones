@@ -222,7 +222,7 @@ public class Camion {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 0 ORDER BY idcamion", null);
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 1 ORDER BY idcamion", null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
@@ -271,7 +271,7 @@ public class Camion {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 1 ORDER BY idcamion", null);
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 0 ORDER BY idcamion", null);
         try {
             if(c != null && c.moveToFirst()) {
                 Integer i = 0;
