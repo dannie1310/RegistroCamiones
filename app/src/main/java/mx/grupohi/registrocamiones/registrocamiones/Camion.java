@@ -335,7 +335,46 @@ public class Camion {
     }
 
 
- static void deleteAll(Context context) {
+ static void deleteSolicitud(Context context) { //Inactivos
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        ContentValues data = new ContentValues();
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 0 ORDER BY idcamion", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                Integer i = 0;
+                do {
+                    data.clear();
+                    data.put("estatus", "0");
+                    db.update("camiones", data, "idcamion = '" + c.getInt(c.getColumnIndex("idcamion")) + "'", null);
+                } while (c.moveToNext());
+            }
+        } finally {
+            db.close();
+        }
+    }
+
+    static void deleteActualizar(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        ContentValues data = new ContentValues();
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 1 ORDER BY idcamion", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                Integer i = 0;
+                do {
+                    data.clear();
+                    data.put("estatus", "0");
+                    db.update("camiones", data, "idcamion = '" + c.getInt(c.getColumnIndex("idcamion")) + "'", null);
+                } while (c.moveToNext());
+            }
+        } finally {
+            db.close();
+        }
+    }
+
+
+    static void deleteAll(Context context) { //Inactivos
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
         ContentValues data = new ContentValues();

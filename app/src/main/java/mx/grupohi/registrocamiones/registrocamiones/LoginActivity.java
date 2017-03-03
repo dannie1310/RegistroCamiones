@@ -396,6 +396,7 @@ public class LoginActivity extends AppCompatActivity {
         Boolean permission_read_external = true;
         Boolean permission_write_external = true;
         Boolean internet = true;
+        Boolean permission_read_phone_state = true;
 
 
         if(ContextCompat.checkSelfPermission(LoginActivity.this, CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -407,13 +408,16 @@ public class LoginActivity extends AppCompatActivity {
             permission_read_external =  false;
             permission_write_external = false;
         }
-
+        if(ContextCompat.checkSelfPermission(LoginActivity.this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
+            permission_read_phone_state =  false;
+        }
 
         if(!Util.isNetworkStatusAvialable(getApplicationContext())) {
             Toast.makeText(LoginActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
             internet = false;
         }
-        return (internet && permission_camara && permission_read_external && permission_write_external);
+        return (internet && permission_camara && permission_read_external && permission_write_external && permission_read_phone_state);
     }
 
 }

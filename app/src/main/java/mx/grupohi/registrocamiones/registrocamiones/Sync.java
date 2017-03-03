@@ -25,6 +25,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
     private JSONObject JSON;
     Integer imagenesRegistradas = 0;
     Integer imagenesTotales = 0;
+    String IMEI;
 
     Sync(Context context, ProgressDialog progressDialog) {
 
@@ -36,7 +37,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-
+            TelephonyManager phneMgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+            IMEI = phneMgr.getDeviceId();
             ContentValues values = new ContentValues();
 
             values.clear();
@@ -47,6 +49,8 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
             values.put("idusuario", usuario.idUsuario);
             values.put("Version", String.valueOf(BuildConfig.VERSION_NAME));
             values.put("id_proyecto", usuario.idProyecto);
+            values.put("IMEI",IMEI);
+
 
             if (Camion.getCount(context) != 0) {
                 JSONObject Obj = Camion.getJSON(context);
@@ -110,10 +114,16 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         progressDialog.dismiss();
         if(aBoolean) {
             try {
-                if (JSONCAMIONES.has("error")) {
-                    Toast.makeText(context, (String) JSONCAMIONES.get("error"), Toast.LENGTH_SHORT).show();
-                } else if(JSONCAMIONES.has("msj")) {
-                    Camion.deleteAll(context); //cambiar estatus
+                if (JSONCAMIONES.has("error_ambos")) {
+                    Toast.makeText(context, (String) JSONCAMIONES.get("error_ambos"), Toast.LENGTH_SHORT).show();
+                }else if(JSONCAMIONES.has("error_solicitudes")){
+                    Camion.deleteActualizar(context);
+                    Toast.makeText(context, (String) JSONCAMIONES.get("error_solicitudes") + ".  Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();
+                }else if(JSONCAMIONES.has("error_actualizaciones")){
+                   Camion.deleteSolicitud(context);
+                    Toast.makeText(context, (String) JSONCAMIONES.get("error_actualizaciones") + ".  Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();
+                }else if(JSONCAMIONES.has("msj")) {
+                    Camion.deleteAll(context);
                     Toast.makeText(context, (String) JSONCAMIONES.get("msj") + ".  Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();
                 }
 
