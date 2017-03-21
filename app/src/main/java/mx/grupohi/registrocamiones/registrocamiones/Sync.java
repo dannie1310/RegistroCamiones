@@ -90,7 +90,14 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                                     ImagenesCamion.syncLimit(context, imagenes.getInt(r));
                                     imagenesRegistradas++;
                                 }
-                            }
+                                  //validar imagenes erroneas
+                            }else if(JSON.has("imagenes_no_registradas")){
+                                  final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_no_registradas"));
+                                  /*for (int r = 0; r < imagenes.length(); r++) {
+                                      ImagenesCamion.syncError(context, imagenes.getInt(r));
+                                      imagenesRegistradas++;
+                                  }*/
+                              }
                             System.out.println("JSON3: "+JSON);
                         } catch (Exception e) {
                             e.printStackTrace();

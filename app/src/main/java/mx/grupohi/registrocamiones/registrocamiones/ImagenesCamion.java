@@ -211,6 +211,26 @@ public class ImagenesCamion {
         }
     }
 
+    public static void syncError(Context context, int id) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Integer idviaje = getIdCamion(context, id);
+        ContentValues data = new ContentValues();
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE idcamion = '" + idviaje +"'", null);
+
+        try {
+
+            data.put("estatus", "2");
+            db.update("imagenes_camion", data,"idcamion = '"+id+"'", null);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
     public static Integer getIdCamion(Context context, Integer idViaje) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
