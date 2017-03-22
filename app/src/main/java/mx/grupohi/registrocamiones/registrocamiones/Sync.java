@@ -66,45 +66,53 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                 URL url = new URL("http://sca.grupohi.mx/android20160923.php");
                 JSONCAMIONES = HttpConnection.POST(url, values);
                 System.out.println("JSON: "+String.valueOf(values));
-                ContentValues aux = new ContentValues();
-                int i = 0;
-                imagenesTotales= ImagenesCamion.getCount(context);
-                System.out.println("JSON2: "+JSONCAMIONES);
-                while (ImagenesCamion.getCount(context) != 0) {
-                    i++;
-                    JSON = null;
-                    //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
-                    aux.put("metodo", "cargaImagenesCamiones");
-                    aux.put("usr", usuario.usr);
-                    aux.put("pass", usuario.pass);
-                    aux.put("bd", usuario.baseDatos);
-                    aux.put("Imagenes", String.valueOf(ImagenesCamion.getJSONImagenes(context)));
 
-                    try {
-                        JSON = HttpConnection.POST(url, aux);
-                        Log.i("json-Imagenes", String.valueOf(aux));
+                if(!JSONCAMIONES.has("error")){
+                    ContentValues aux = new ContentValues();
+                    int i = 0;
+                    imagenesTotales = ImagenesCamion.getCount(context);
+                    System.out.println("JSON2: " + JSONCAMIONES);
+
+                    while (ImagenesCamion.getCount(context) != 0) {
+                        i++;
+                        JSON = null;
+                        //System.out.println("Existen imagenes para sincronizar: " + ImagenesViaje.getCount(context));
+                        aux.put("metodo", "cargaImagenesCamiones");
+                        aux.put("usr", usuario.usr);
+                        aux.put("pass", usuario.pass);
+                        aux.put("bd", usuario.baseDatos);
+                        aux.put("Imagenes", String.valueOf(ImagenesCamion.getJSONImagenes(context)));
+
                         try {
-                              if (JSON.has("imagenes_registradas")) {
-                                final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
-                                for (int r = 0; r < imagenes.length(); r++) {
-                                    ImagenesCamion.syncLimit(context, imagenes.getInt(r));
-                                    imagenesRegistradas++;
-                                }
-                                  //validar imagenes erroneas
-                            }else if(JSON.has("imagenes_no_registradas")){
-                                  final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_no_registradas"));
-                                  /*for (int r = 0; r < imagenes.length(); r++) {
-                                      ImagenesCamion.syncError(context, imagenes.getInt(r));
+                            JSON = HttpConnection.POST(url, aux);
+                            Log.i("json-Imagenes", String.valueOf(aux));
+                            try {
+                                if (JSON.getString("imagenes_registradas").equals(" ")) {
+                                    final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
+                                    for (int r = 0; r < imagenes.length(); r++) {
+                                        ImagenesCamion.syncLimit(context, imagenes.getInt(r));
+                                        imagenesRegistradas++;
+                                    }
+                                    //validar imagenes erroneas
+                                } else if (JSON.has("imagenes_no_registradas")) {
+                                    final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_no_registradas"));
+                                  for (int r = 0; r < imagenes.length(); r++) {
+                                     // ImagenesCamion.syncError(context, imagenes.getInt(r));//revisar el estatus de la tabla imagen_camion
                                       imagenesRegistradas++;
-                                  }*/
-                              }
-                            System.out.println("JSON3: "+JSON);
+                                  }
+                                }
+                                System.out.println("JSON3: " + JSON);
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                   /* if(ImagenesCamion.getCountErrorImagen(context) != 0){
+                        ImagenesCamion.cambioEstatus(context);
+                    }*/
                 }
 
             }catch (Exception e) {
@@ -121,8 +129,10 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         progressDialog.dismiss();
         if(aBoolean) {
             try {
-                if (JSONCAMIONES.has("error_ambos")) {
-                    Toast.makeText(context, (String) JSONCAMIONES.get("error_ambos"), Toast.LENGTH_SHORT).show();
+                /*if(JSONCAMIONES.has("error")){
+                    Toast.makeText(context, (String) JSONCAMIONES.get("error"), Toast.LENGTH_LONG).show();
+                }else */if (JSONCAMIONES.has("error_ambos")) {
+                    Toast.makeText(context, (String) JSONCAMIONES.get("error_ambos"), Toast.LENGTH_LONG).show();
                 }else if(JSONCAMIONES.has("error_solicitudes")){
                     Camion.deleteActualizar(context);
                     Toast.makeText(context, (String) JSONCAMIONES.get("error_solicitudes") + ".  Imagenes Registradas: "+imagenesRegistradas+" de "+imagenesTotales, Toast.LENGTH_LONG).show();

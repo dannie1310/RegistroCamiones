@@ -86,7 +86,7 @@ public class ImagenesCamion {
     public static Integer getCount(Context context) {
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion ",null);
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE estatus = 1 ",null);
         try {
             return c.getCount();
         } finally {
@@ -252,19 +252,24 @@ public class ImagenesCamion {
         }
     }
 
-    public static void cambioEstatus(Context context, int id) {//editar ********************
+    public static void cambioEstatus(Context context) {//editar ********************
         ContentValues data = new ContentValues();
 
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT idcamion FROM imagenes_camion WHERE estatus = '2'", null);
         try {
-            data.put("estatus", "0");
-            db.update("imagenes_camion", data,"id = '"+id+"'", null);
-           // System.out.println("imagenes_errores: "+id +"datos: "+ data.toString());
+            do {
+                if (c != null && c.moveToFirst()) {
+                    data.put("estatus", "1");
+                    db.update("imagenes_camion", data, "id = '" + c.getInt(0) + "'", null);
+                }
+            }while (c.moveToNext());
+
         }catch (Exception e) {
             e.printStackTrace();
         } finally {
-
+            c.close();
             db.close();
         }
     }
@@ -275,6 +280,19 @@ public class ImagenesCamion {
         Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE estatus = 0 ",null);
         try {
            // System.out.println("error = "+ c.getCount());
+            return c.getCount();
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    public static Integer getCountErrorImagen(Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM imagenes_camion WHERE estatus = 2 ",null);
+        try {
+            // System.out.println("error = "+ c.getCount());
             return c.getCount();
         } finally {
             c.close();
