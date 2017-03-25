@@ -87,20 +87,19 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
                             JSON = HttpConnection.POST(url, aux);
                             Log.i("json-Imagenes", String.valueOf(aux));
                             try {
-                                if (JSON.getString("imagenes_registradas").equals(" ")) {
+                                if (JSON.has("imagenes_registradas")) {
                                     final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_registradas"));
                                     for (int r = 0; r < imagenes.length(); r++) {
                                         ImagenesCamion.syncLimit(context, imagenes.getInt(r));
                                         imagenesRegistradas++;
                                     }
-                                    //validar imagenes erroneas
-                                } else if (JSON.has("imagenes_no_registradas")) {
+                                }/* else if (JSON.has("imagenes_no_registradas")) {
                                     final JSONArray imagenes = new JSONArray(JSON.getString("imagenes_no_registradas"));
                                   for (int r = 0; r < imagenes.length(); r++) {
-                                     // ImagenesCamion.syncError(context, imagenes.getInt(r));//revisar el estatus de la tabla imagen_camion
+                                      ImagenesCamion.syncError(context, imagenes.getInt(r));//revisar el estatus de la tabla imagen_camion
                                       imagenesRegistradas++;
                                   }
-                                }
+                                }*/
                                 System.out.println("JSON3: " + JSON);
                             } catch (Exception e) {
 
@@ -129,9 +128,9 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
         progressDialog.dismiss();
         if(aBoolean) {
             try {
-                /*if(JSONCAMIONES.has("error")){
+                if(JSONCAMIONES.has("error")){
                     Toast.makeText(context, (String) JSONCAMIONES.get("error"), Toast.LENGTH_LONG).show();
-                }else */if (JSONCAMIONES.has("error_ambos")) {
+                }else if (JSONCAMIONES.has("error_ambos")) {
                     Toast.makeText(context, (String) JSONCAMIONES.get("error_ambos"), Toast.LENGTH_LONG).show();
                 }else if(JSONCAMIONES.has("error_solicitudes")){
                     Camion.deleteActualizar(context);

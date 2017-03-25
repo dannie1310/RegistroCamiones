@@ -569,11 +569,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             focusView = sindicato;
             cancel = true;
         }*/
-        if(TextUtils.isEmpty(propietarios)) {
+       /* if(TextUtils.isEmpty(propietarios)) {
             propietario.setError(getString(R.string.error_field_required));
             focusView = propietario;
             cancel = true;
-        }
+        }*/
         if(TextUtils.isEmpty(pcamions)) {
             pcamion.setError(getString(R.string.error_field_required));
             focusView = pcamion;
@@ -614,11 +614,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             focusView = operador;
             cancel = true;
         }
-        if(TextUtils.isEmpty(licencias)) {
+       /* if(TextUtils.isEmpty(licencias)) {
             licencia.setError(getString(R.string.error_field_required));
             focusView = licencia;
             cancel = true;
-        }
+        }*/
         if(TextUtils.isEmpty(extensions)) {
             extension.setError(getString(R.string.error_field_required));
             focusView = extension;
@@ -629,11 +629,11 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             focusView = disminucion;
             cancel = true;
         }
-        if(TextUtils.isEmpty(vig_licencias)) {
+       /* if(TextUtils.isEmpty(vig_licencias)) {
             vig_licencia.setError(getString(R.string.error_field_required));
             focusView = vig_licencia;
             cancel = true;
-        }
+        }*/
         return cancel;
 
     }
