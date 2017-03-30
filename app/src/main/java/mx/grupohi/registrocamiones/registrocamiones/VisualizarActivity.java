@@ -505,6 +505,9 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
                 usuario.deleteAll();
                 startActivity(login_activity);
             }
+        }else if(id == R.id.nav_cambio){
+            Intent main = new Intent(this,CambioClaveActivity.class);
+            startActivity(main);
         }
 
 

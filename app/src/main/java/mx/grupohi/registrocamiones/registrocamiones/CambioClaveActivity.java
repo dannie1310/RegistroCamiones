@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,41 +17,93 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+public class CambioClaveActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    Usuario usuario;
-    Button buttonRevizar;
-    Camion camion;
-    Spinner camiones;
-    String idcamion;
-    private HashMap<String, String> spinnerMap;
     private ProgressDialog progressDialogSync;
+    private ProgressDialog progressDialogCambio;
+    private Usuario usuario;
+    private EditText uss;
+    private EditText actual;
+    private EditText pass;
+    private EditText passConfirmacion;
+    private Button cambio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_cambio_clave);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        usuario = new Usuario(getApplicationContext());
-        buttonRevizar =(Button) findViewById(R.id.buttonRevizar);
+
+        usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
+        uss = (EditText) findViewById(R.id.user);
+        pass = (EditText) findViewById(R.id.pass);
+        passConfirmacion = (EditText)findViewById(R.id.passCambio);
+        actual = (EditText) findViewById(R.id.passAnterior);
+        cambio = (Button) findViewById(R.id.CambioButton);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        cambio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!checar()){
+                    if(uss.getText().toString().toUpperCase().equals(usuario.usr.toUpperCase()) && actual.getText().toString().equals(usuario.pass)) {
+
+                        if (pass.getText().toString().length()>= 8 && passConfirmacion.getText().toString().length()>=8){
+
+                            if(pass.getText().toString().equals(passConfirmacion.getText().toString())){
+                                //OK
+                                new AlertDialog.Builder(CambioClaveActivity.this)
+                                        .setTitle("¡ADVERTENCIA!")
+                                        .setMessage("Se actualizara la contraseña de la Intranet. \n ¿Deséas continuar con el cambio de clave de acceso?")
+                                        .setNegativeButton("NO", null)
+                                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                                            @Override public void onClick(DialogInterface dialog, int which) {
+                                                progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
+                                                new SincronizarCambioClave(getApplicationContext(), progressDialogCambio,pass.getText().toString()).execute((Void) null);
+                                                uss.setText("");
+                                                pass.setText("");
+                                                actual.setText("");
+                                                passConfirmacion.setText("");
+                                            }
+                                        })
+                                        .create()
+                                        .show();
+
+                            }else{
+                                Toast.makeText(getApplicationContext(), R.string.error_pass, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.error_field_requiredpass, Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        if(!uss.getText().toString().equals(usuario.usr)) {
+                            Toast.makeText(getApplicationContext(), R.string.error_uss, Toast.LENGTH_SHORT).show();
+                        }
+                        else if(!actual.getText().toString().equals(usuario.pass)) {
+                            Toast.makeText(getApplicationContext(), R.string.error_anter, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+            }
+        });
+
         if(drawer != null)
             drawer.post(new Runnable() {
                 @Override
@@ -62,10 +115,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
 
                         if (tvp != null) {
-                            tvp.setText(usuario.getProyecto(getApplicationContext()));
+                            tvp.setText(usuario.descripcionBaseDatos);
                         }
                         if (tvu != null) {
-                            tvu.setText(usuario.getName());
+                            tvu.setText(usuario.nombre);
                         }
                         if (tvv != null) {
                             tvv.setText("Versión " + String.valueOf(BuildConfig.VERSION_NAME));
@@ -73,54 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-
-        camion = new Camion(this);
-
-        camiones = (Spinner) findViewById(R.id.spinnerCamiones);
-
-        final ArrayList<String> descripcionesCamiones = camion.getArrayListDescripciones();
-        final ArrayList <String> idsCamiones = camion.getArrayListId();
-
-        final String[] spinnerArray = new String[idsCamiones.size()];
-        spinnerMap = new HashMap<>();
-
-        for (int i = 0; i < idsCamiones.size(); i++) {
-            spinnerMap.put(descripcionesCamiones.get(i), idsCamiones.get(i));
-            spinnerArray[i] = descripcionesCamiones.get(i);
-        }
-
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, spinnerArray);
-        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        camiones.setAdapter(arrayAdapter);
-
-        camiones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String placa = camiones.getSelectedItem().toString();
-                idcamion = spinnerMap.get(placa);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        buttonRevizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(idcamion == "0"){
-                    Toast.makeText(getApplicationContext(), "Por Favor Seleccione un Camión de la Lista", Toast.LENGTH_SHORT).show();
-                    camiones.requestFocus();
-                }else {
-                    Intent visualizar = new Intent(getApplicationContext(), VisualizarActivity.class);
-                    visualizar.putExtra("idcamion", idcamion);
-                    startActivity(visualizar);
-                }
-            }
-        });
     }
 
     @Override
@@ -129,18 +136,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
+            super.onBackPressed();
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }*/
+    private boolean checar() {
+
+        //Reset Errors
+
+        //sindicato.setError(null);
+        uss.setError(null);
+        pass.setError(null);
+        passConfirmacion.setError(null);
+        actual.setError(null);
+
+        final String usuarios = uss.getText().toString();
+        final String passw = pass.getText().toString();
+        final String passCambio = passConfirmacion.getText().toString();
+        final String vieja = actual.getText().toString();
+
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if(TextUtils.isEmpty(usuarios)) {
+            uss.setError(getString(R.string.error_field_required));
+            focusView = uss;
+            cancel = true;
+        }
+        if(TextUtils.isEmpty(vieja)) {
+            actual.setError(getString(R.string.error_field_required));
+            focusView = actual;
+            cancel = true;
+        }
+        if(TextUtils.isEmpty(passw)) {
+            pass.setError(getString(R.string.error_field_required));
+            focusView = pass;
+            cancel = true;
+        }
+        if(TextUtils.isEmpty(passCambio)) {
+            passConfirmacion.setError(getString(R.string.error_field_required));
+            focusView = passConfirmacion;
+            cancel = true;
+        }
+
+        return cancel;
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -164,14 +206,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+            Intent re  = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(re);
         } else if (id == R.id.nav_re){
             Intent re  = new Intent(getApplicationContext(),ReactivacionActivity.class);
             startActivity(re);
         } else if (id == R.id.nav_sync) {
-            new AlertDialog.Builder(MainActivity.this)
+            new AlertDialog.Builder(CambioClaveActivity.this)
                     .setTitle("¡ADVERTENCIA!")
                     .setMessage("¿Deséas continuar con la sincronización?")
                     .setNegativeButton("NO", null)
@@ -179,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override public void onClick(DialogInterface dialog, int which) {
                             if (Util.isNetworkStatusAvialable(getApplicationContext())) {
                                 if(!Camion.isSync(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(CambioClaveActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
@@ -194,14 +235,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_logout) {
 
             if(!Camion.isSync(getApplicationContext())){
-                new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(CambioClaveActivity.this)
                         .setTitle("¡ADVERTENCIA!")
                         .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
                         .setNegativeButton("NO", null)
                         .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 if (Util.isNetworkStatusAvialable(getApplicationContext())) {
-                                    progressDialogSync = ProgressDialog.show(MainActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    progressDialogSync = ProgressDialog.show(CambioClaveActivity.this, "Sincronizando datos", "Por favor espere...", true);
                                     new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
 
                                     Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
@@ -221,9 +262,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(login_activity);
             }
         }else if(id == R.id.nav_cambio){
-            Intent main = new Intent(this,CambioClaveActivity.class);
-            startActivity(main);
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

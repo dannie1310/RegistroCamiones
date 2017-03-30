@@ -189,5 +189,38 @@ class Usuario {
         return respuesta;
     }
 
+    public Integer getId() {
+        db = db_sca.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM user LIMIT 1", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                this.idUsuario = c.getInt(0);
+            }
+            return this.idUsuario;
+        } finally {
+            c.close();
+            db.close();
+        }
+    }
+
+    static boolean updatePass(String pass, Context context) {
+        boolean resp=false;
+        ContentValues data = new ContentValues();
+
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+
+        try{
+
+            data.put("pass", pass);
+
+            db.update("user", data, "", null);
+            resp = true;
+        } finally {
+            db.close();
+        }
+        return resp;
+    }
+
 
 }

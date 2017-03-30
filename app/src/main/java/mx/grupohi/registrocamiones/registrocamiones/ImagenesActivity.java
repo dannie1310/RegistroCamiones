@@ -201,6 +201,9 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
                 usuario.deleteAll();
                 startActivity(login_activity);
             }
+        }else if(id == R.id.nav_cambio){
+            Intent main = new Intent(this,CambioClaveActivity.class);
+            startActivity(main);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

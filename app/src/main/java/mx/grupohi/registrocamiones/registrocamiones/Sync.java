@@ -63,7 +63,7 @@ class Sync extends AsyncTask<Void, Void, Boolean> {
 
             try {
 
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                URL url = new URL("http://172.50.32.106/sca.grupohi.mx/android20160923.php");
                 JSONCAMIONES = HttpConnection.POST(url, values);
                 System.out.println("JSON: "+String.valueOf(values));
 

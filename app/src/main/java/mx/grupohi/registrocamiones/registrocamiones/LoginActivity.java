@@ -209,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("w: "+mUsuario+mPassword);
 
             try {
-                URL url = new URL("http://sca.grupohi.mx/android20160923.php");
+                URL url = new URL("http://172.50.32.106/sca.grupohi.mx/android20160923.php");
                 JSON = Util.JsonHttp(url, values);
                 db_sca.deleteCatalogos();
                 if(JSON.has("error")) {
