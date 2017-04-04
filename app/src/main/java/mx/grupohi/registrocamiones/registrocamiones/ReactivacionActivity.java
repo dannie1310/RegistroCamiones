@@ -224,6 +224,11 @@ public class ReactivacionActivity extends AppCompatActivity
         }else if(id == R.id.nav_cambio){
             Intent main = new Intent(this,CambioClaveActivity.class);
             startActivity(main);
+        }else if (id == R.id.nav_des) {
+
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

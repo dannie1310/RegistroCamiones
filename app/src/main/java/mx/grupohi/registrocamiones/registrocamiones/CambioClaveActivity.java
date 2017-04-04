@@ -265,6 +265,11 @@ public class CambioClaveActivity extends AppCompatActivity
             Intent intent = getIntent();
             finish();
             startActivity(intent);
+        }else if (id == R.id.nav_des) {
+
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
+
         }
 
 

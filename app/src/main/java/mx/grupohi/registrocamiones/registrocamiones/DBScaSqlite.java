@@ -64,4 +64,15 @@ public class DBScaSqlite extends SQLiteOpenHelper {
 
         db.close();
     }
+
+    public void descargaCatalogos() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        db.execSQL("DELETE FROM tipos_imagenes");
+        db.execSQL("DELETE FROM sindicatos");
+        db.execSQL("DELETE FROM empresas");
+
+        db.close();
+    }
 }

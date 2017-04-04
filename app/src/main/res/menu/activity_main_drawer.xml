@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_action_name"
             android:title="Reactivar Camiones" />
         <item
+            android:id="@+id/nav_des"
+            android:icon="@drawable/ic_action_des"
+            android:title="Descarga de Catálogos" />
+        <item
             android:id="@+id/nav_sync"
             android:icon="@drawable/ic_action_sync"
             android:title="Sincronizar Camiones" />

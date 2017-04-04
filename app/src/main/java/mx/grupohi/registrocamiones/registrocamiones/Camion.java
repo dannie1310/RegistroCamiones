@@ -2,6 +2,7 @@ package mx.grupohi.registrocamiones.registrocamiones;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -435,5 +436,27 @@ public class Camion {
                 db.close();
             }
         return data;
+    }
+
+    public static Integer findCamion(Integer idCamion, Context context) {
+        DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
+        SQLiteDatabase db = db_sca.getWritableDatabase();
+        Integer resp = 0;
+        Cursor c = db.rawQuery("SELECT * FROM camiones WHERE idcamion = '" + idCamion + "'", null);
+        try {
+            if(c != null && c.moveToFirst()) {
+                if(c.getInt(c.getColumnIndex("estatus")) == 0){
+                    resp = 1;
+                }else{
+                    resp = 0;
+                }
+            } else {
+               resp = 2;
+            }
+            return resp;
+        } finally {
+            c.close();
+            db.close();
+        }
     }
 }
