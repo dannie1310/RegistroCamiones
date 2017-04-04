@@ -47,13 +47,14 @@ public class Empresa {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM empresas ORDER BY descripcion ASC", null);
-        if (c != null && c.moveToFirst())
+        if (c != null && c.moveToFirst()) {
             try {
 
                 if (c.getCount() == 1) {
+                    data.add("-PENDIENTE POR ASIGNAR-");
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                 } else {
-                    data.add("--Pendiente por asignar--");
+                    data.add("-PENDIENTE POR ASIGNAR-");
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                     while (c.moveToNext()) {
                         data.add(c.getString(c.getColumnIndex("descripcion")));
@@ -63,6 +64,9 @@ public class Empresa {
                 c.close();
                 db.close();
             }
+        }else{
+            data.add("-PENDIENTE POR ASIGNAR-");
+        }
 
         return data;
     }
@@ -71,21 +75,25 @@ public class Empresa {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM empresas ORDER BY descripcion ASC", null);
-        if (c != null && c.moveToFirst())
+        if (c != null && c.moveToFirst()) {
             try {
                 if (c.getCount() == 1) {
-                    data.add(c.getString(c.getColumnIndex("idempresas")));
+                    data.add("0");
+                    data.add(c.getString(c.getColumnIndex("idempresa")));
                 } else {
                     data.add("0");
-                    data.add(c.getString(c.getColumnIndex("idempresas")));
+                    data.add(c.getString(c.getColumnIndex("idempresa")));
                     while (c.moveToNext()) {
-                        data.add(c.getString(c.getColumnIndex("idempresas")));
+                        data.add(c.getString(c.getColumnIndex("idempresa")));
                     }
                 }
             } finally {
                 c.close();
                 db.close();
             }
+        }else{
+            data.add("0");
+        }
         return data;
     }
 

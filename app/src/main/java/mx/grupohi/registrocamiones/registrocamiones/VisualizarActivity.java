@@ -38,11 +38,11 @@ import java.util.Locale;
 public class VisualizarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     Usuario usuario;
+    Empresa e;
     ImagenesCamion icamion;
     TextView economico;
     TextView cu_real;
     TextView cu_pago;
-    EditText empresa;
     EditText propietario;
     EditText pcamion;
     EditText pcaja;
@@ -65,12 +65,16 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
     String idSindicato;
     Spinner spinner;
     private HashMap<String, String> spinnerMap;
+    Spinner empresa;
+    private HashMap<String, String> spinnerMapEmpresa;
     Sindicato sindicato;
     Camion camion;
     String nombre;
     Double cubicacion;
     String numSindicato;
     String activar;
+    String nombreEm;
+    String idEm;
 
     private DatePickerDialog vigenciaDatePickerDialog;
 
@@ -137,8 +141,47 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         /*sindicato = (EditText) findViewById(R.id.textViewSindicato);
         sindicato.setText(camion.sindicato);*/
 
-        empresa = (EditText) findViewById(R.id.textViewEmpresa);
-        empresa.setText(camion.empresa);
+        empresa = (Spinner) findViewById(R.id.spinnerEmpresa);
+
+        e = new Empresa(getApplicationContext());
+
+        final ArrayList<String> empresas = e.getArrayListNombres();
+        final ArrayList<String> idsE = e.getArrayListId();
+
+        String[] spinnerArrayEm = new String[idsE.size()];
+        spinnerMapEmpresa = new HashMap<>();
+
+        for (int i = 0; i < idsE.size(); i++) {
+            spinnerMapEmpresa.put(empresas.get(i), idsE.get(i));
+            spinnerArrayEm[i] = empresas.get(i);
+        }
+
+        final ArrayAdapter<String> ae = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, spinnerArrayEm);
+        a.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        empresa.setAdapter(ae);
+        if(!camion.empresa.isEmpty()) {
+            String c = camion.empresa;
+            empresa.setSelection(getIndex(empresa, camion.empresa));
+        }
+
+
+        if (empresa != null) {
+            empresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    nombreEm = empresa.getSelectedItem().toString();
+                    idEm = spinnerMapEmpresa.get(nombreEm);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
 
         propietario = (EditText) findViewById(R.id.textViewPropietario);
         if(!camion.propietario.equals("SIN")){
@@ -377,7 +420,12 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
             }else {
                 data.put("sindicato", String.valueOf(idSindicato.replaceAll(" +", " ").trim()));
             }
-            data.put("empresa", String.valueOf(empresa.getText()).replaceAll(" +"," ").trim());
+            if(idEm != String.valueOf(0)){
+                data.put("empresa", String.valueOf(nombreEm.replaceAll(" +", " ").trim()));
+            }else{
+                data.put("empresa", String.valueOf(idEm.replaceAll(" +", " ").trim()));
+            }
+
             data.put("propietario", String.valueOf(propietario.getText()).replaceAll(" +"," ").trim());
             data.put("operador", String.valueOf(operador.getText()).replaceAll(" +"," ").trim());
             data.put("licencia", String.valueOf(licencia.getText()).replaceAll(" +"," ").trim());
@@ -456,7 +504,10 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         if (id == R.id.nav_home) {
            Intent main = new Intent(this,MainActivity.class);
             startActivity(main);
-        } else if (id == R.id.nav_sync) {
+        } else if (id == R.id.nav_re){
+            Intent re  = new Intent(getApplicationContext(),ReactivacionActivity.class);
+            startActivity(re);
+        }else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(VisualizarActivity.this)
                     .setTitle("¡ADVERTENCIA!")
                     .setMessage("¿Deséas continuar con la sincronización?")
@@ -528,7 +579,7 @@ public class VisualizarActivity extends AppCompatActivity implements NavigationV
         //Reset Errors
 
         //sindicato.setError(null);
-        empresa.setError(null);
+       // empresa.setError(null);
         propietario.setError(null);
         pcamion.setError(null);
         pcaja.setError(null);

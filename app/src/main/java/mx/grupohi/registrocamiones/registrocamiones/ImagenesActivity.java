@@ -152,6 +152,9 @@ public class ImagenesActivity extends AppCompatActivity implements NavigationVie
         if (id == R.id.nav_home) {
             Intent main = new Intent(this,MainActivity.class);
             startActivity(main);
+        }else if (id == R.id.nav_re){
+            Intent re  = new Intent(getApplicationContext(),ReactivacionActivity.class);
+            startActivity(re);
         } else if (id == R.id.nav_sync) {
             new AlertDialog.Builder(ImagenesActivity.this)
                     .setTitle("¡ADVERTENCIA!")

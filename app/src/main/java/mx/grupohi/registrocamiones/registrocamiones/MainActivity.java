@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -222,6 +223,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }else if(id == R.id.nav_cambio){
             Intent main = new Intent(this,CambioClaveActivity.class);
+            try {
+                Util.copyDataBase(getApplicationContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             startActivity(main);
         }
 

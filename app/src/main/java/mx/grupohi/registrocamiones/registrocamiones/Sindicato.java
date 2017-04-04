@@ -48,13 +48,13 @@ public class Sindicato {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM sindicatos ORDER BY descripcion ASC", null);
-        if (c != null && c.moveToFirst())
+        if (c != null && c.moveToFirst()) {
             try {
 
                 if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                 } else {
-                    data.add("--Pendiente por asignar--");
+                    data.add("-PENDIENTE POR ASIGNAR-");
                     data.add(c.getString(c.getColumnIndex("descripcion")));
                     while (c.moveToNext()) {
                         data.add(c.getString(c.getColumnIndex("descripcion")));
@@ -64,6 +64,9 @@ public class Sindicato {
                 c.close();
                 db.close();
             }
+        }else{
+            data.add("-PENDIENTE POR ASIGNAR-");
+        }
 
         return data;
     }
@@ -72,7 +75,7 @@ public class Sindicato {
         ArrayList<String> data = new ArrayList<>();
         db = db_sca.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM sindicatos ORDER BY descripcion ASC", null);
-        if (c != null && c.moveToFirst())
+        if (c != null && c.moveToFirst()) {
             try {
                 if (c.getCount() == 1) {
                     data.add(c.getString(c.getColumnIndex("idsindicato")));
@@ -87,6 +90,9 @@ public class Sindicato {
                 c.close();
                 db.close();
             }
+        }else{
+            data.add("0");
+        }
         return data;
     }
 
