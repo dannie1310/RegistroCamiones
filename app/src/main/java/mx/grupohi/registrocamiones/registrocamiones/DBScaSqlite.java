@@ -15,6 +15,7 @@ public class DBScaSqlite extends SQLiteOpenHelper {
             "CREATE TABLE tipos_imagenes (id TEXT, descripcion TEXT);",
             "CREATE TABLE imagenes_camion (ID INTEGER PRIMARY KEY AUTOINCREMENT, idcamion INTEGER, idtipo_imagen TEXT, url TEXT, imagen BLOB, estatus INTEGER);",
             "CREATE TABLE sindicatos (idsindicato INTEGER PRIMARY KEY, descripcion TEXT);",
+            "CREATE TABLE empresas (idempresa INTEGER PRIMARY KEY, descripcion TEXT);",
 
     };
 
@@ -41,6 +42,7 @@ public class DBScaSqlite extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS tipos_imagenes");
         db.execSQL("DROP TABLE IF EXISTS imagenes_camion");
         db.execSQL("DROP TABLE IF EXISTS sindicatos");
+        db.execSQL("DROP TABLE IF EXISTS empresas");
 
         for (String query : queries) {
             db.execSQL(query);
@@ -58,6 +60,7 @@ public class DBScaSqlite extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM tipos_imagenes");
         db.execSQL("DELETE FROM imagenes_camion");
         db.execSQL("DELETE FROM sindicatos");
+        db.execSQL("DELETE FROM empresas");
 
         db.close();
     }

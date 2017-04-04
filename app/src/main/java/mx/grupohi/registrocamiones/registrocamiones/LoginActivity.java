@@ -50,6 +50,9 @@ import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_PHONE_STATE;
 
+/**
+ * Created by DBENITEZ on 03/11/2016.
+ */
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -311,6 +314,8 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //sindicatos
+
                     Sindicato sindicato = new Sindicato(getApplicationContext());
                     try {
                         final JSONArray sindicatos = new JSONArray(JSON.getString("sindicatos"));
@@ -331,6 +336,35 @@ public class LoginActivity extends AppCompatActivity {
 
                             System.out.println("q "+sind);
                             if(!sindicato.create(data)){
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //empresas
+
+                    Empresa empresa = new Empresa(getApplicationContext());
+                    try {
+                        final JSONArray empresas = new JSONArray(JSON.getString("empresas"));
+                        for (int i = 0; i < empresas.length(); i++) {
+                            final int finalI = i + 1;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressDialog.setMessage("Actualizando catálogo de empresas... \n Empresa " + finalI + " de " + empresas.length());
+                                }
+                            });
+
+                            JSONObject sind = empresas.getJSONObject(i);
+
+                            data.clear();
+                            data.put("idempresa", sind.getString("id"));
+                            data.put("descripcion", sind.getString("empresa"));
+
+                            System.out.println("q "+sind);
+                            if(!empresa.create(data)){
                                 return false;
                             }
                         }
