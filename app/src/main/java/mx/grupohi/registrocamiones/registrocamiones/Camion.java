@@ -241,6 +241,7 @@ public class Camion {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
+        Empresa e = new Empresa(context);
         Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 1 ORDER BY idcamion", null);
         try {
             if(c != null && c.moveToFirst()) {
@@ -251,7 +252,13 @@ public class Camion {
 
                     json.put("id_camion", c.getString(0));
                     json.put("sindicato", c.getString(1));
-                    json.put("empresa", c.getString(2));
+                    if(!c.getString(2).equals("0")){
+                        e = e.find(c.getString(2));
+                        json.put("empresa", e.idempresas);
+                    }else{
+                        json.put("empresa", c.getString(2));
+                    }
+
                     json.put("propietario", c.getString(3));
                     json.put("operador", c.getString(4));
                     json.put("licencia", c.getString(5));
@@ -276,8 +283,8 @@ public class Camion {
 
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception em) {
+            em.printStackTrace();
         } finally {
             c.close();
             db.close();
@@ -290,6 +297,7 @@ public class Camion {
         JSONObject JSON = new JSONObject();
         DBScaSqlite db_sca = new DBScaSqlite(context, "sca", null, 1);
         SQLiteDatabase db = db_sca.getWritableDatabase();
+        Empresa e = new Empresa(context);
         Cursor c = db.rawQuery("SELECT * FROM camiones WHERE estatus = 1 and estatus_camion = 0 ORDER BY idcamion", null);
         try {
             if(c != null && c.moveToFirst()) {
@@ -300,6 +308,12 @@ public class Camion {
 
                     json.put("id_camion", c.getString(0));
                     json.put("sindicato", c.getString(1));
+                    if(c.getString(2) != "0"){
+                        e = e.find(c.getString(2));
+                        json.put("empresa", e.idempresas);
+                    }else{
+                        json.put("empresa", c.getString(2));
+                    }
                     json.put("empresa", c.getString(2));
                     json.put("propietario", c.getString(3));
                     json.put("operador", c.getString(4));
@@ -325,8 +339,8 @@ public class Camion {
 
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception em) {
+            em.printStackTrace();
         } finally {
             c.close();
             db.close();
