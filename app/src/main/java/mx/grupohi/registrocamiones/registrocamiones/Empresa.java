@@ -102,7 +102,7 @@ public class Empresa {
         Cursor c = db.rawQuery("SELECT * FROM empresas WHERE descripcion = '"+descripcion+"'", null);
         try{
             if(c != null && c.moveToFirst()){
-                this.idempresas = c.getInt(c.getColumnIndex("idempresas"));
+                this.idempresas = c.getInt(c.getColumnIndex("idempresa"));
                 this.descripcion = c.getString(c.getColumnIndex("descripcion"));
 
             }
