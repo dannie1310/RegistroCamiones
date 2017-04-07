@@ -3,6 +3,7 @@ package mx.grupohi.registrocamiones.registrocamiones;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -85,7 +86,6 @@ public class SincronizarCambioClave extends AsyncTask<Void, Void, Boolean> {
                 } else if(JSONVIAJES.has("msj")) {
                     Usuario.updatePass(NuevaClave,context);
                     Toast.makeText(context, (String) JSONVIAJES.get("msj"), Toast.LENGTH_LONG).show();
-
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

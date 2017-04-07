@@ -34,6 +34,8 @@ public class CambioClaveActivity extends AppCompatActivity
     private EditText pass;
     private EditText passConfirmacion;
     private Button cambio;
+    private String us_sesion;
+    private String us_escrito;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,9 @@ public class CambioClaveActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 if(!checar()){
-                    if(uss.getText().toString().toUpperCase().equals(usuario.usr.toUpperCase()) && actual.getText().toString().equals(usuario.pass)) {
+                    us_sesion = usuario.usr.toUpperCase();
+                    us_escrito = uss.getText().toString().toUpperCase();
+                    if(us_escrito.equals(us_escrito) && actual.getText().toString().equals(usuario.pass)) {
 
                         if (pass.getText().toString().length()>= 8 && passConfirmacion.getText().toString().length()>=8){
 
@@ -92,7 +96,7 @@ public class CambioClaveActivity extends AppCompatActivity
                             Toast.makeText(getApplicationContext(), R.string.error_field_requiredpass, Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        if(!uss.getText().toString().equals(usuario.usr)) {
+                        if(!us_escrito.equals(us_escrito)) {
                             Toast.makeText(getApplicationContext(), R.string.error_uss, Toast.LENGTH_SHORT).show();
                         }
                         else if(!actual.getText().toString().equals(usuario.pass)) {
