@@ -46,6 +46,7 @@ public class CambioClaveActivity extends AppCompatActivity
 
         usuario = new Usuario(this);
         usuario = usuario.getUsuario();
+        us_sesion = usuario.usr.toUpperCase();
         uss = (EditText) findViewById(R.id.user);
         pass = (EditText) findViewById(R.id.pass);
         passConfirmacion = (EditText)findViewById(R.id.passCambio);
@@ -59,35 +60,45 @@ public class CambioClaveActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+
         cambio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(!checar()){
-                    us_sesion = usuario.usr.toUpperCase();
+
                     us_escrito = uss.getText().toString().toUpperCase();
-                    if(us_escrito.equals(us_escrito) && actual.getText().toString().equals(usuario.pass)) {
+
+                    if(us_escrito.equals(us_sesion) && actual.getText().toString().equals(usuario.pass)) {
 
                         if (pass.getText().toString().length()>= 8 && passConfirmacion.getText().toString().length()>=8){
 
                             if(pass.getText().toString().equals(passConfirmacion.getText().toString())){
                                 //OK
-                                new AlertDialog.Builder(CambioClaveActivity.this)
-                                        .setTitle("¡ADVERTENCIA!")
-                                        .setMessage("Se actualizara la contraseña de la Intranet. \n ¿Deséas continuar con el cambio de clave de acceso?")
-                                        .setNegativeButton("NO", null)
-                                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                                            @Override public void onClick(DialogInterface dialog, int which) {
-                                                progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
-                                                new SincronizarCambioClave(getApplicationContext(), progressDialogCambio,pass.getText().toString()).execute((Void) null);
-                                                uss.setText("");
-                                                pass.setText("");
-                                                actual.setText("");
-                                                passConfirmacion.setText("");
-                                            }
-                                        })
-                                        .create()
-                                        .show();
+                                if(!Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    Toast.makeText(CambioClaveActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+
+                                }else {
+                                    new AlertDialog.Builder(CambioClaveActivity.this)
+                                            .setTitle("¡ADVERTENCIA!")
+                                            .setMessage("Se actualizara la contraseña de la Intranet. \n ¿Deséas continuar con el cambio de clave de acceso?")
+                                            .setNegativeButton("NO", null)
+                                            .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
+                                                    new SincronizarCambioClave(getApplicationContext(), progressDialogCambio, pass.getText().toString()).execute((Void) null);
+                                                    uss.setText("");
+                                                    pass.setText("");
+                                                    actual.setText("");
+                                                    passConfirmacion.setText("");
+                                                    usuario = usuario.getUsuario();
+                                                }
+                                            })
+                                            .create()
+                                            .show();
+                                }
 
                             }else{
                                 Toast.makeText(getApplicationContext(), R.string.error_pass, Toast.LENGTH_SHORT).show();
@@ -96,7 +107,7 @@ public class CambioClaveActivity extends AppCompatActivity
                             Toast.makeText(getApplicationContext(), R.string.error_field_requiredpass, Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        if(!us_escrito.equals(us_escrito)) {
+                        if(!us_escrito.equals(us_sesion)) {
                             Toast.makeText(getApplicationContext(), R.string.error_uss, Toast.LENGTH_SHORT).show();
                         }
                         else if(!actual.getText().toString().equals(usuario.pass)) {

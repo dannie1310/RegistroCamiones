@@ -28,9 +28,10 @@ public class SincronizarCambioClave extends AsyncTask<Void, Void, Boolean> {
 
     private JSONObject JSONVIAJES;
     private JSONObject JSON;
+    Intent in;
 
     SincronizarCambioClave(Context context, ProgressDialog progressDialog, String clavenueva) {
-
+        in = new Intent(context,CambioClaveActivity.class);
         this.context = context;
         this.progressDialog = progressDialog;
         this.NuevaClave = clavenueva;
@@ -86,6 +87,7 @@ public class SincronizarCambioClave extends AsyncTask<Void, Void, Boolean> {
                 } else if(JSONVIAJES.has("msj")) {
                     Usuario.updatePass(NuevaClave,context);
                     Toast.makeText(context, (String) JSONVIAJES.get("msj"), Toast.LENGTH_LONG).show();
+                    context.startActivity(in);
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

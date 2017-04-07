@@ -3,12 +3,14 @@ package mx.grupohi.registrocamiones.registrocamiones;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -81,7 +83,74 @@ public class DescargaActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        //menu
+        if (id == R.id.nav_home) {
+            Intent re  = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(re);
+        } else if (id == R.id.nav_re){
+            Intent re  = new Intent(getApplicationContext(),ReactivacionActivity.class);
+            startActivity(re);
+        } else if (id == R.id.nav_sync) {
+            new AlertDialog.Builder(DescargaActivity.this)
+                    .setTitle("¡ADVERTENCIA!")
+                    .setMessage("¿Deséas continuar con la sincronización?")
+                    .setNegativeButton("NO", null)
+                    .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                if(!Camion.isSync(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(DescargaActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No es necesaria la sincronización en este momento", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
+        } else if (id == R.id.nav_logout) {
+
+            if(!Camion.isSync(getApplicationContext())){
+                new AlertDialog.Builder(DescargaActivity.this)
+                        .setTitle("¡ADVERTENCIA!")
+                        .setMessage("Hay camiones aún sin sincronizar, se borrarán los registros almacenados en este dispositivo,  \n ¿Deséas sincronizar?")
+                        .setNegativeButton("NO", null)
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                if (Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    progressDialogSync = ProgressDialog.show(DescargaActivity.this, "Sincronizando datos", "Por favor espere...", true);
+                                    new Sync(getApplicationContext(), progressDialogSync).execute((Void) null);
+
+                                    Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                                    usuario.deleteAll();
+                                    startActivity(login_activity);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.error_internet, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else {
+                Intent login_activity = new Intent(getApplicationContext(), LoginActivity.class);
+                usuario.deleteAll();
+                startActivity(login_activity);
+            }
+        }else if(id == R.id.nav_cambio){
+            Intent descarga = new Intent(this, CambioClaveActivity.class);
+            startActivity(descarga);
+        }else if (id == R.id.nav_des) {
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+            Intent descarga = new Intent(this, DescargaActivity.class);
+            startActivity(descarga);
+
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
