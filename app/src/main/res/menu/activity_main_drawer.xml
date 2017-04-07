@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <item android:title="@string/title_group_registro">
+        <menu>
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_action_registrar"
+                android:title="@string/title_activity_main" />
+            <item
+                android:id="@+id/nav_re"
+                android:icon="@drawable/ic_action_name"
+                android:title="@string/title_activity_reactivacion" />
+        </menu>
+    </item>
+
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_action_registrar"
-            android:title="Registrar Camiones" />
-        <item
-            android:id="@+id/nav_re"
-            android:icon="@drawable/ic_action_name"
-            android:title="Reactivar Camiones" />
+
         <item
             android:id="@+id/nav_des"
             android:icon="@drawable/ic_action_des"
-            android:title="Descarga de Catálogos" />
+            android:title="@string/title_activity_descarga" />
         <item
             android:id="@+id/nav_sync"
             android:icon="@drawable/ic_action_sync"
-            android:title="Sincronizar Camiones" />
+            android:title="@string/title_activity_sync" />
 
     </group>
 
-    <item android:title="Sesión Actual">
+    <item android:title="@string/title_group_sesion">
         <menu>
             <item
                 android:id="@+id/nav_cambio"
                 android:icon="@drawable/ic_action_cambio"
-                android:title="Cambiar Clave de Acceso" />
+                android:title="@string/title_activity_cambio_clave" />
             <item
                 android:icon="@android:drawable/ic_menu_close_clear_cancel"
-                android:title="Cerrar Sesión"
+                android:title="@string/title_activity_cerrar_sesion"
                 android:id="@+id/nav_logout" />
         </menu>
     </item>
