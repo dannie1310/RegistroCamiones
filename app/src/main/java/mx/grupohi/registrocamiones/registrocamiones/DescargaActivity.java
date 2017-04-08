@@ -146,8 +146,6 @@ public class DescargaActivity extends AppCompatActivity
             Intent intent = getIntent();
             finish();
             startActivity(intent);
-            Intent descarga = new Intent(this, DescargaActivity.class);
-            startActivity(descarga);
 
         }
 
