@@ -349,10 +349,11 @@ public class CambioClaveActivity extends AppCompatActivity
             if (aBoolean) {
                 try {
                     Toast.makeText(context, (String) JSONVIAJES.get("msj"), Toast.LENGTH_LONG).show();
+                    //startActivity(in);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //startActivity(in);
+                startActivity(in);
             }
         }
     }
