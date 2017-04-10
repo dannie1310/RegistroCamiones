@@ -91,10 +91,15 @@ public class CambioClaveActivity extends AppCompatActivity
                         if (pass.getText().toString().length() >= 8 && passConfirmacion.getText().toString().length() >= 8) {
 
                             if (pass.getText().toString().equals(passConfirmacion.getText().toString())) {
-                                //OK
-                                progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
-                                c = new CambioClave(getApplicationContext(), progressDialogSync, pass.getText().toString());
-                                c.execute((Void) null);
+                                if (!Util.isNetworkStatusAvialable(getApplicationContext())) {
+                                    Toast.makeText(CambioClaveActivity.this, R.string.error_internet, Toast.LENGTH_LONG).show();
+
+                                }else {
+                                    //OK
+                                    progressDialogCambio = ProgressDialog.show(CambioClaveActivity.this, "Cambiando Contraseña", "Por favor espere...", true);
+                                    c = new CambioClave(getApplicationContext(), progressDialogSync, pass.getText().toString());
+                                    c.execute((Void) null);
+                                }
 
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.error_pass, Toast.LENGTH_SHORT).show();
@@ -354,6 +359,8 @@ public class CambioClaveActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 startActivity(in);
+            }else{
+                Toast.makeText(context, "Error al cambiar la contraseña, verifique su conexión.", Toast.LENGTH_LONG).show();
             }
         }
     }

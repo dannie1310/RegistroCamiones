@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -46,8 +47,10 @@ public class DescargaActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         usuario = new Usuario(this);
+        usuario = usuario.getUsuario();
         mainActivity = new Intent(this, MainActivity.class);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -61,6 +64,28 @@ public class DescargaActivity extends AppCompatActivity
         mProgressDialog = ProgressDialog.show(DescargaActivity.this, "Descargando", "Por favor espere...", true);
         descargaCatalogos = new DescargaActivity.DescargaCatalogos(getApplicationContext(), progressDialogSync);
         descargaCatalogos.execute((Void) null);
+        if (drawer != null)
+            drawer.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < drawer.getChildCount(); i++) {
+                        View child = drawer.getChildAt(i);
+                        TextView tvp = (TextView) child.findViewById(R.id.textViewProyecto);
+                        TextView tvu = (TextView) child.findViewById(R.id.textViewUser);
+                        TextView tvv = (TextView) child.findViewById(R.id.textViewVersion);
+
+                        if (tvp != null) {
+                            tvp.setText(usuario.descripcionBaseDatos);
+                        }
+                        if (tvu != null) {
+                            tvu.setText(usuario.nombre);
+                        }
+                        if (tvv != null) {
+                            tvv.setText("Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                        }
+                    }
+                }
+            });
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
