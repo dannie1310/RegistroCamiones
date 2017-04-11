@@ -136,7 +136,7 @@ public class CambioClaveActivity extends AppCompatActivity
                             tvu.setText(usuario.nombre);
                         }
                         if (tvv != null) {
-                            tvv.setText("Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
                         }
                     }
                 }
@@ -147,12 +147,9 @@ public class CambioClaveActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private boolean checar() {

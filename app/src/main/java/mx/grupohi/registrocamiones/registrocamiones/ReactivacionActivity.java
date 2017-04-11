@@ -70,7 +70,7 @@ public class ReactivacionActivity extends AppCompatActivity
                             tvu.setText(usuario.getName());
                         }
                         if (tvv != null) {
-                            tvv.setText("Versión " + String.valueOf(BuildConfig.VERSION_NAME));
+                            tvv.setText(getString(R.string.app_name)+"     "+"Versión " + String.valueOf(BuildConfig.VERSION_NAME));
                         }
                     }
                 }
