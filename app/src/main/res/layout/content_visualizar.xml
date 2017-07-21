@@ -282,7 +282,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewPCamion"
-                android:inputType="textCapCharacters"
+                android:inputType="text"
+                android:digits="0123456789qwertzuiopasdfghjklyxcvbnmñ-QAZWSXEDCRFVTGBYHNUJMIKOLPÑ"
+                android:maxLength="10"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
@@ -304,7 +306,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewPCaja"
-                android:inputType="textCapCharacters"
+                android:inputType="text"
+                android:digits="0123456789qwertzuiopasdfghjklyxcvbnmñ-QAZWSXEDCRFVTGBYHNUJMIKOLPÑ"
+                android:maxLength="10"
                 android:layout_weight="1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
         </LinearLayout>
